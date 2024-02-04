@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "586038510313",
+    "project_id": "pruebafirebase-6f47a",
+    "storage_bucket": "pruebafirebase-6f47a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:586038510313:android:3092ec0ca06e04466fa678",
+        "android_client_info": {
+          "package_name": "com.example.mvvmjetpackcomposelogin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPI-3oJ9uFAZI6TJ4jmPBUimQO6Am7eSs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,6 @@
 package com.example.mvvmjetpackcomposelogin.screens.register.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -40,8 +42,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.mvvmjetpackcomposelogin.R
-import com.example.mvvmjetpackcomposelogin.screens.login.ui.LoginViewModel
+import com.example.mvvmjetpackcomposelogin.navegacion.NavigationScreens
 import com.example.mvvmjetpackcomposelogin.ui.theme.ForgotPasswordTextColor
 import com.example.mvvmjetpackcomposelogin.ui.theme.LoginButtonContainer
 import com.example.mvvmjetpackcomposelogin.ui.theme.LoginButtonContainerDisabled
@@ -50,44 +53,50 @@ import com.example.mvvmjetpackcomposelogin.ui.theme.TextFieldTextColor
 import kotlinx.coroutines.launch
 
 @Composable
-fun RegisterScreen(viewModel: RegisterViewModel) {
+fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
     Box(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Register(Modifier.align(Alignment.Center), viewModel)
+        Register(Modifier.align(Alignment.Center), viewModel, navController)
     }
 }
 
 @Composable
-fun Register(modifier: Modifier, viewModel: RegisterViewModel) {
+fun Register(modifier: Modifier, viewModel: RegisterViewModel, navController: NavController) {
 
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
     val loginEnable: Boolean by viewModel.registerEnable.observeAsState(initial = false)
 
-    val isLoading : Boolean by viewModel.isLoading.observeAsState(initial = false)
+    val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
+
+    val errorMessage : String by viewModel.errorMessage.observeAsState( initial = "")
+
+    val context = LocalContext.current
 
     val corroutineScope = rememberCoroutineScope()
 
-    if (isLoading){
-        Box(Modifier.fillMaxSize()){
+    if (isLoading) {
+        Box(Modifier.fillMaxSize()) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
-    }else{
+    } else {
+        if (errorMessage != "")
+            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
         Column(modifier = modifier) {
             HeaderImage(Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.padding(16.dp))
-            EmailField(email) { viewModel.onLoginChanged(it, password) }
+            EmailField(email) { viewModel.onRegisterChanged(it, password) }
             Spacer(modifier = Modifier.padding(4.dp))
-            PaswordField(password) { viewModel.onLoginChanged(email, it) }
+            PaswordField(password) { viewModel.onRegisterChanged(email, it) }
             Spacer(modifier = Modifier.padding(8.dp))
-            ForgotPassword(Modifier.align(Alignment.End))
+            ForgotPassword(Modifier.align(Alignment.End), navController)
             Spacer(modifier = Modifier.padding(16.dp))
             LoginButton(loginEnable) {
                 corroutineScope.launch {
-                    viewModel.onLoginSelected()
+                    viewModel.onRegisterSelected(navController)
                 }
             }
         }
@@ -101,31 +110,6 @@ fun HeaderImage(modifier: Modifier) {
         painter = painterResource(id = R.mipmap.logo),
         contentDescription = null,
         modifier = modifier
-    )
-}
-
-@Composable
-fun NameField(name: String, onTextFieldChanged: (String) -> Unit) {
-    TextField(
-        value = name,
-        onValueChange = { onTextFieldChanged(it) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(TextFieldContainerColor),
-        placeholder = {
-            Text(
-                text = "Nombre"
-            )
-        },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-        singleLine = true,
-        maxLines = 1,
-        colors = TextFieldDefaults.colors(
-            focusedTextColor = Color.DarkGray,
-            unfocusedTextColor = Color.DarkGray,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
-        )
     )
 }
 
@@ -196,10 +180,10 @@ fun PaswordField(password: String, onTextFieldChanged: (String) -> Unit) {
 }
 
 @Composable
-fun ForgotPassword(modifier: Modifier) {
+fun ForgotPassword(modifier: Modifier, navController: NavController) {
     Text(
-        text = "Olvidaste la contraseña?",
-        modifier = modifier.clickable { },
+        text = "Ya tienes cuenta?",
+        modifier = modifier.clickable { navController.navigate(NavigationScreens.LoginScreen.route) },
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
         color = ForgotPasswordTextColor
@@ -207,9 +191,9 @@ fun ForgotPassword(modifier: Modifier) {
 }
 
 @Composable
-fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
+fun LoginButton(loginEnable: Boolean, onRegisterSelected: () -> Unit) {
     Button(
-        onClick = { onLoginSelected() },
+        onClick = { onRegisterSelected() },
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp),
@@ -222,6 +206,6 @@ fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
         shape = RoundedCornerShape(8.dp),
         enabled = loginEnable
     ) {
-        Text(text = "Iniciar Sesion")
+        Text(text = "Registrar Usuario")
     }
 }

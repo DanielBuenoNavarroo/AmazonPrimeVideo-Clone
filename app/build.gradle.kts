@@ -1,6 +1,9 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+
+    // Firebase
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -68,7 +71,12 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // NUEVAS DEPENDENCIAS
+    // Navegación
     implementation("androidx.compose.runtime:runtime-livedata:1.6.0")
     implementation("androidx.navigation:navigation-compose:2.7.6")
 
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
 }

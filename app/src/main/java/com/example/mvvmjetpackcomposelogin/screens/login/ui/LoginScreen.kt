@@ -1,5 +1,6 @@
 package com.example.mvvmjetpackcomposelogin.screens.login.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -40,7 +42,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.mvvmjetpackcomposelogin.R
+import com.example.mvvmjetpackcomposelogin.navegacion.NavigationScreens
 import com.example.mvvmjetpackcomposelogin.ui.theme.ForgotPasswordTextColor
 import com.example.mvvmjetpackcomposelogin.ui.theme.LoginButtonContainer
 import com.example.mvvmjetpackcomposelogin.ui.theme.LoginButtonContainerDisabled
@@ -49,24 +53,27 @@ import com.example.mvvmjetpackcomposelogin.ui.theme.TextFieldTextColor
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel) {
+fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
     Box(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Login(Modifier.align(Alignment.Center), viewModel)
+        Login(Modifier.align(Alignment.Center), viewModel, navController)
     }
 }
 
 @Composable
-fun Login(modifier: Modifier, viewModel: LoginViewModel) {
+fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavController) {
 
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
 
     val isLoading : Boolean by viewModel.isLoading.observeAsState(initial = false)
+    val errorMessage : String by viewModel.errorMessage.observeAsState( initial = "")
+
+    val context = LocalContext.current
 
     val corroutineScope = rememberCoroutineScope()
 
@@ -75,6 +82,8 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
     }else{
+        if (errorMessage != "")
+            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
         Column(modifier = modifier) {
             HeaderImage(Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.padding(16.dp))
@@ -82,11 +91,11 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
             Spacer(modifier = Modifier.padding(4.dp))
             PaswordField(password) { viewModel.onLoginChanged(email, it) }
             Spacer(modifier = Modifier.padding(8.dp))
-            ForgotPassword(Modifier.align(Alignment.End))
+            ForgotPassword(Modifier.align(Alignment.End), navController)
             Spacer(modifier = Modifier.padding(16.dp))
             LoginButton(loginEnable) {
                 corroutineScope.launch {
-                    viewModel.onLoginSelected()
+                    viewModel.onLoginSelected(navController)
                 }
             }
         }
@@ -170,10 +179,10 @@ fun PaswordField(password: String, onTextFieldChanged: (String) -> Unit) {
 }
 
 @Composable
-fun ForgotPassword(modifier: Modifier) {
+fun ForgotPassword(modifier: Modifier, navController: NavController) {
     Text(
-        text = "Olvidaste la contraseña?",
-        modifier = modifier.clickable { },
+        text = "No tienes cuenta?",
+        modifier = modifier.clickable { navController.navigate(NavigationScreens.RegisterScreen.route) },
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
         color = ForgotPasswordTextColor
