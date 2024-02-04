@@ -18,3 +18,6 @@ val ForgotPasswordTextColor = Color(0xFFFB9600)
 
 val LoginButtonContainer = Color(0xFFFF4303)
 val LoginButtonContainerDisabled = Color(0xFFF78058)
+
+// Splash Screen
+val bgSplashScreen = Color(0xFF414141)
