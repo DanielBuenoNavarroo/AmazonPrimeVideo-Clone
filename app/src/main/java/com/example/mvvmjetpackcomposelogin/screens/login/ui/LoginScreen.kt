@@ -50,13 +50,14 @@ import com.example.mvvmjetpackcomposelogin.ui.theme.LoginButtonContainer
 import com.example.mvvmjetpackcomposelogin.ui.theme.LoginButtonContainerDisabled
 import com.example.mvvmjetpackcomposelogin.ui.theme.TextFieldContainerColor
 import com.example.mvvmjetpackcomposelogin.ui.theme.TextFieldTextColor
+import com.example.mvvmjetpackcomposelogin.ui.theme.bgPrincipal
 import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
     Box(
         Modifier
-            .fillMaxSize()
+            .fillMaxSize().background(bgPrincipal)
             .padding(16.dp)
     ) {
         Login(Modifier.align(Alignment.Center), viewModel, navController)
@@ -70,18 +71,18 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavContr
     val password: String by viewModel.password.observeAsState(initial = "")
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
 
-    val isLoading : Boolean by viewModel.isLoading.observeAsState(initial = false)
-    val errorMessage : String by viewModel.errorMessage.observeAsState( initial = "")
+    val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
+    val errorMessage: String by viewModel.errorMessage.observeAsState(initial = "")
 
     val context = LocalContext.current
 
     val corroutineScope = rememberCoroutineScope()
 
-    if (isLoading){
-        Box(Modifier.fillMaxSize()){
+    if (isLoading) {
+        Box(Modifier.fillMaxSize()) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
-    }else{
+    } else {
         if (errorMessage != "")
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
         Column(modifier = modifier) {
@@ -89,7 +90,7 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavContr
             Spacer(modifier = Modifier.padding(16.dp))
             EmailField(email) { viewModel.onLoginChanged(it, password) }
             Spacer(modifier = Modifier.padding(4.dp))
-            PaswordField(password) { viewModel.onLoginChanged(email, it) }
+            PasswordField(password) { viewModel.onLoginChanged(email, it) }
             Spacer(modifier = Modifier.padding(8.dp))
             ForgotPassword(Modifier.align(Alignment.End), navController)
             Spacer(modifier = Modifier.padding(16.dp))
@@ -138,7 +139,7 @@ fun EmailField(email: String, onTextFieldChanged: (String) -> Unit) {
 }
 
 @Composable
-fun PaswordField(password: String, onTextFieldChanged: (String) -> Unit) {
+fun PasswordField(password: String, onTextFieldChanged: (String) -> Unit) {
 
     var passwordVisibility by remember { mutableStateOf(false) }
 

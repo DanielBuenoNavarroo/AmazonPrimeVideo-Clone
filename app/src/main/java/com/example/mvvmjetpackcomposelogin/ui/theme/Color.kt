@@ -11,6 +11,9 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 // NUEVOS COLORES
+
+val bgPrincipal = Color(0xFF292929)
+
 val TextFieldTextColor = Color(0xFF636262)
 val TextFieldContainerColor = Color(0xFFDEDDDD)
 
@@ -18,6 +21,3 @@ val ForgotPasswordTextColor = Color(0xFFFB9600)
 
 val LoginButtonContainer = Color(0xFFFF4303)
 val LoginButtonContainerDisabled = Color(0xFFF78058)
-
-// Splash Screen
-val bgSplashScreen = Color(0xFF414141)

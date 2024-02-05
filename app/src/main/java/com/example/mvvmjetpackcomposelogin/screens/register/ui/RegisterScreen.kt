@@ -50,13 +50,14 @@ import com.example.mvvmjetpackcomposelogin.ui.theme.LoginButtonContainer
 import com.example.mvvmjetpackcomposelogin.ui.theme.LoginButtonContainerDisabled
 import com.example.mvvmjetpackcomposelogin.ui.theme.TextFieldContainerColor
 import com.example.mvvmjetpackcomposelogin.ui.theme.TextFieldTextColor
+import com.example.mvvmjetpackcomposelogin.ui.theme.bgPrincipal
 import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
     Box(
         Modifier
-            .fillMaxSize()
+            .fillMaxSize().background(bgPrincipal)
             .padding(16.dp)
     ) {
         Register(Modifier.align(Alignment.Center), viewModel, navController)

@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mvvmjetpackcomposelogin.R
 import com.example.mvvmjetpackcomposelogin.navegacion.NavigationScreens
-import com.example.mvvmjetpackcomposelogin.ui.theme.bgSplashScreen
+import com.example.mvvmjetpackcomposelogin.ui.theme.bgPrincipal
 import kotlinx.coroutines.delay
 
 @Composable
@@ -28,7 +28,7 @@ fun SplashScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(bgSplashScreen)
+            .background(bgPrincipal)
             .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
