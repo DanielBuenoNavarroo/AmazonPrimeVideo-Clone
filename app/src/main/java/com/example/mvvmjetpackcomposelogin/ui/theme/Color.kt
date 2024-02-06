@@ -11,10 +11,16 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 // NUEVOS COLORES
+val bgPrincipal = Color(0xE9030924)
+val azulPrincipal = Color(0xFF0B7196)
+val linksColor = Color(0xFF1577B8)
+val textColor = Color(0xFF7D868A)
 
-val bgPrincipal = Color(0xFF292929)
+val botonDisabled = Color(0xFF48ACCF)
 
-val TextFieldTextColor = Color(0xFF636262)
+val noSeleccionado = Color(0xFF333352)
+
+val TextFieldTextColor = Color(0xFF222222)
 val TextFieldContainerColor = Color(0xFFDEDDDD)
 
 val ForgotPasswordTextColor = Color(0xFFFB9600)

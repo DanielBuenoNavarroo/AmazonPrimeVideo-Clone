@@ -69,7 +69,7 @@ fun Register(modifier: Modifier, viewModel: RegisterViewModel, navController: Na
 
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
-    val loginEnable: Boolean by viewModel.registerEnable.observeAsState(initial = false)
+    val regsterEnable: Boolean by viewModel.registerEnable.observeAsState(initial = false)
 
     val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
 
@@ -95,7 +95,7 @@ fun Register(modifier: Modifier, viewModel: RegisterViewModel, navController: Na
             Spacer(modifier = Modifier.padding(8.dp))
             ForgotPassword(Modifier.align(Alignment.End), navController)
             Spacer(modifier = Modifier.padding(16.dp))
-            LoginButton(loginEnable) {
+            LoginButton(regsterEnable) {
                 corroutineScope.launch {
                     viewModel.onRegisterSelected(navController)
                 }
@@ -131,8 +131,8 @@ fun EmailField(email: String, onTextFieldChanged: (String) -> Unit) {
         singleLine = true,
         maxLines = 1,
         colors = TextFieldDefaults.colors(
-            focusedTextColor = Color.DarkGray,
-            unfocusedTextColor = Color.DarkGray,
+            focusedTextColor = Color.LightGray,
+            unfocusedTextColor = Color.LightGray,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
         )
@@ -192,7 +192,7 @@ fun ForgotPassword(modifier: Modifier, navController: NavController) {
 }
 
 @Composable
-fun LoginButton(loginEnable: Boolean, onRegisterSelected: () -> Unit) {
+fun LoginButton(registeEnable: Boolean, onRegisterSelected: () -> Unit) {
     Button(
         onClick = { onRegisterSelected() },
         modifier = Modifier
@@ -205,7 +205,7 @@ fun LoginButton(loginEnable: Boolean, onRegisterSelected: () -> Unit) {
             disabledContentColor = Color.White
         ),
         shape = RoundedCornerShape(8.dp),
-        enabled = loginEnable
+        enabled = registeEnable
     ) {
         Text(text = "Registrar Usuario")
     }

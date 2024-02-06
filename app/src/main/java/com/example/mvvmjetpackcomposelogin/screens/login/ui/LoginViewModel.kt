@@ -55,6 +55,9 @@ class LoginViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private val _passwordVisibility = MutableLiveData<Boolean>()
+    val passwordVisibility : LiveData<Boolean> = _passwordVisibility
+
     fun onLoginChanged(email: String, password: String) {
         _email.value = email
         _password.value = password
@@ -66,6 +69,10 @@ class LoginViewModel : ViewModel() {
         delay(2000)
         _isLoading.value = false
         signInEmailPassword { navController.navigate(NavigationScreens.HomeScreen.route) }
+    }
+
+    fun togglePasswordVisibility() {
+        _passwordVisibility.value = _passwordVisibility.value?.not() ?: true
     }
 
     private fun isValidEmail(email: String): Boolean =

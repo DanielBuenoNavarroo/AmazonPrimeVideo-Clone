@@ -36,8 +36,7 @@ class RegisterViewModel {
             auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                 if (it.isSuccessful) {
                     Log.i("aplicacion", "logeado correctamente")
-                    val displayName = it.result.user?.email?.split("@")?.get(0)
-                    createUser(displayName)
+                    createUser()
                     login()
                 } else {
                     Log.i("aplicacion", "registrado incorrectamente: ${it.exception}")
@@ -49,13 +48,12 @@ class RegisterViewModel {
         }
     }
 
-    private fun createUser(displayName: String?) {
+    private fun createUser() {
         val userId = auth.currentUser?.uid
 
         val user = User(
             userId = userId.toString(),
-            displayName = displayName.toString(),
-            avatarUrl = "",
+            avatarUrl = "0",
             id = null
         ).toMap()
 

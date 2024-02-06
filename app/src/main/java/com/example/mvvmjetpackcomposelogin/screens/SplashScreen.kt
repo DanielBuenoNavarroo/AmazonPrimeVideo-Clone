@@ -16,6 +16,7 @@ import androidx.navigation.NavController
 import com.example.mvvmjetpackcomposelogin.R
 import com.example.mvvmjetpackcomposelogin.navegacion.NavigationScreens
 import com.example.mvvmjetpackcomposelogin.ui.theme.bgPrincipal
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 
 @Composable
@@ -23,7 +24,11 @@ fun SplashScreen(navController: NavController) {
 
     LaunchedEffect(key1 = true) {
         delay(3500L)
-        navController.navigate(NavigationScreens.LoginScreen.route)
+        if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
+            navController.navigate(NavigationScreens.LoginScreen.route)
+        }else{
+            navController.navigate(NavigationScreens.HomeScreen.route)
+        }
     }
     Column(
         modifier = Modifier

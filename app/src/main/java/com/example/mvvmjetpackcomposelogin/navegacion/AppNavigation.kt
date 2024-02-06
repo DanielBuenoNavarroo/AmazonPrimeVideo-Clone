@@ -29,7 +29,7 @@ fun AppNavigation() {
             RegisterScreen(RegisterViewModel(), navController)
         }
         composable(route = NavigationScreens.HomeScreen.route){
-            HomeScreen()
+            HomeScreen(navController)
         }
     }
 }
