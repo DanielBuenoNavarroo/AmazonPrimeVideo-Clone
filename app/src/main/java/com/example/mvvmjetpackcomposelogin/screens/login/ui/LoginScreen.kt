@@ -83,7 +83,7 @@ fun LoginP(viewModel: LoginViewModel, navController: NavController) {
 
     val context = LocalContext.current
 
-    val corroutineScope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
 
     if (isLoading) {
         Box(Modifier.fillMaxSize()) {
@@ -109,7 +109,7 @@ fun LoginP(viewModel: LoginViewModel, navController: NavController) {
             )
             Spacer(modifier = Modifier.height(32.dp))
             LoginButton(loginEnable) {
-                corroutineScope.launch {
+                coroutineScope.launch {
                     viewModel.onLoginSelected(navController)
                 }
             }
