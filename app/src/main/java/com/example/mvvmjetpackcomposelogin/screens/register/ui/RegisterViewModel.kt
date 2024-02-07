@@ -18,12 +18,11 @@ class RegisterViewModel {
     private val auth: FirebaseAuth = Firebase.auth
     private val _loading = MutableLiveData(false)
 
-    private val _error = MutableLiveData<String>()
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
     fun clearError() {
-        _error.value = ""
+        _errorMessage.value = ""
     }
 
     private fun createUserEmailPassword(login: () -> Unit) {
