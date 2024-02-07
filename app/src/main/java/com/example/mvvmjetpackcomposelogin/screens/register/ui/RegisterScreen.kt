@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -33,6 +32,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -53,6 +53,7 @@ import com.example.mvvmjetpackcomposelogin.ui.theme.azulPrincipal
 import com.example.mvvmjetpackcomposelogin.ui.theme.bgPrincipal
 import com.example.mvvmjetpackcomposelogin.ui.theme.botonDisabled
 import com.example.mvvmjetpackcomposelogin.ui.theme.linksColor
+import com.example.mvvmjetpackcomposelogin.ui.theme.noSeleccionado
 import com.example.mvvmjetpackcomposelogin.ui.theme.textColor
 import kotlinx.coroutines.launch
 
@@ -97,19 +98,24 @@ fun Register(viewModel: RegisterViewModel, navController: NavController) {
             Welcome()
             Spacer(modifier = Modifier.height(16.dp))
             RegisterBox()
+            Spacer(modifier = Modifier.height(16.dp))
             Mail(email) { viewModel.onRegisterChanged(it, password) }
+            Spacer(modifier = Modifier.height(16.dp))
             Password(
                 password = password,
                 passwordVisibility = passwordVisibility,
                 onTextFieldChanged = { viewModel.onRegisterChanged(email, it) },
                 toglePasswordVisibility = { viewModel.togglePasswordVisibility() }
             )
+            Spacer(modifier = Modifier.height(32.dp))
             RegisterButton(regsterEnable) {
                 coroutineScope.launch {
                     viewModel.onRegisterSelected(navController)
                 }
             }
+            Spacer(modifier = Modifier.height(16.dp))
             TermsOfUse()
+            Spacer(modifier = Modifier.height(64.dp))
             LoginBox(navController)
         }
     }
@@ -122,16 +128,15 @@ fun Welcome() {
 
 @Composable
 fun RegisterBox() {
-    Card(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(50.dp),
-        shape = RoundedCornerShape(4.dp),
+            .height(50.dp)
+            .clip(RoundedCornerShape(4.dp))
     ) {
         Row(
             modifier = Modifier
-                .fillMaxSize()
-                .background(bgPrincipal),
+                .fillMaxSize(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -280,17 +285,17 @@ fun TermsOfUse(){
 
 @Composable
 fun LoginBox(navController: NavController) {
-    Card(
+    Box(
         modifier = Modifier
             .clickable { navController.navigate(NavigationScreens.LoginScreen.route) }
             .fillMaxWidth()
-            .height(50.dp),
-        shape = RoundedCornerShape(2.dp),
+            .height(50.dp)
+            .background(noSeleccionado)
+            .clip(RoundedCornerShape(4.dp))
     ) {
         Row(
             modifier = Modifier
-                .fillMaxSize()
-                .background(bgPrincipal),
+                .fillMaxSize(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {

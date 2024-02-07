@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -33,6 +32,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -128,17 +128,17 @@ fun Welcome() {
 
 @Composable
 fun RegisterBox(navController: NavController) {
-    Card(
+    Box(
         modifier = Modifier
             .clickable { navController.navigate(NavigationScreens.RegisterScreen.route) }
             .fillMaxWidth()
-            .height(50.dp),
-        shape = RoundedCornerShape(4.dp),
+            .background(noSeleccionado)
+            .height(50.dp)
+            .clip(RoundedCornerShape(4.dp))
     ) {
         Row(
             modifier = Modifier
-                .fillMaxSize()
-                .background(noSeleccionado),
+                .fillMaxSize(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -157,16 +157,14 @@ fun RegisterBox(navController: NavController) {
 
 @Composable
 fun LoginBox() {
-    Card(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(50.dp),
-        shape = RoundedCornerShape(2.dp),
+            .height(50.dp)
     ) {
         Row(
             modifier = Modifier
-                .fillMaxSize()
-                .background(bgPrincipal),
+                .fillMaxSize(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -298,7 +296,7 @@ fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
 fun TermsOfUse(){
     Text( buildAnnotatedString {
         withStyle(style = SpanStyle(color = textColor)){
-            append("By signing in, you agree to the")
+            append("By creating an account, you agree to the")
         }
         append("  ")
         withStyle(style = SpanStyle(color = linksColor)){
