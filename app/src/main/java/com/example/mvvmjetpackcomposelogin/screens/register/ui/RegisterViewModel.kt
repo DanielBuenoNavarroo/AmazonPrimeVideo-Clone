@@ -52,7 +52,8 @@ class RegisterViewModel {
 
         val user = User(
             userId = userId.toString(),
-            avatarUrl = "0",
+            nombre = "",
+            apellido = "",
             id = null
         ).toMap()
 
