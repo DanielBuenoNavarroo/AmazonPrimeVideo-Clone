@@ -78,7 +78,7 @@ fun Register(viewModel: RegisterViewModel, navController: NavController) {
     val passwordVisibility by viewModel.passwordVisibility.observeAsState(initial = false)
     val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
 
-    val errorMessage : String by viewModel.errorMessage.observeAsState( initial = "")
+    val errorMessage: String by viewModel.errorMessage.observeAsState(initial = "")
 
     val context = LocalContext.current
 
@@ -89,7 +89,7 @@ fun Register(viewModel: RegisterViewModel, navController: NavController) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
     } else {
-        if (errorMessage != ""){
+        if (errorMessage != "") {
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
             viewModel.clearError()
         }
@@ -267,20 +267,20 @@ fun RegisterButton(registerEnable: Boolean, onRegisterSelected: () -> Unit) {
 }
 
 @Composable
-fun TermsOfUse(){
-    Text( buildAnnotatedString {
-        withStyle(style = SpanStyle(color = textColor)){
+fun TermsOfUse() {
+    Text(buildAnnotatedString {
+        withStyle(style = SpanStyle(color = textColor)) {
             append("By signing in, you agree to the")
         }
         append("  ")
-        withStyle(style = SpanStyle(color = linksColor)){
+        withStyle(style = SpanStyle(color = linksColor)) {
             append("Prime Video Terms of Use")
         }
         append("  ")
-        withStyle(style = SpanStyle(color = textColor)){
+        withStyle(style = SpanStyle(color = textColor)) {
             append("and license agreements which can be found on the Amazon website.")
         }
-    } )
+    })
 }
 
 @Composable

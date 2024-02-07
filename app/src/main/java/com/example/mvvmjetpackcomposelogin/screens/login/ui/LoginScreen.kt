@@ -90,7 +90,7 @@ fun Login(viewModel: LoginViewModel, navController: NavController) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
     } else {
-        if (errorMessage != ""){
+        if (errorMessage != "") {
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
             viewModel.clearError()
         }
@@ -293,18 +293,18 @@ fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
 }
 
 @Composable
-fun TermsOfUse(){
-    Text( buildAnnotatedString {
-        withStyle(style = SpanStyle(color = textColor)){
+fun TermsOfUse() {
+    Text(buildAnnotatedString {
+        withStyle(style = SpanStyle(color = textColor)) {
             append("By creating an account, you agree to the")
         }
         append("  ")
-        withStyle(style = SpanStyle(color = linksColor)){
+        withStyle(style = SpanStyle(color = linksColor)) {
             append("Prime Video Terms of Use")
         }
         append("  ")
-        withStyle(style = SpanStyle(color = textColor)){
+        withStyle(style = SpanStyle(color = textColor)) {
             append("and license agreements which can be found on the Amazon website.")
         }
-    } )
+    })
 }
