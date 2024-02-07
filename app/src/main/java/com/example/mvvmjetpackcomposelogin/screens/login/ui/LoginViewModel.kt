@@ -16,33 +16,6 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
 
-    private val auth: FirebaseAuth = Firebase.auth
-
-    private val _error = MutableLiveData<String>()
-    private val _errorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String> = _errorMessage
-
-    private fun clearError() {
-        _error.value = ""
-    }
-
-    private fun signInEmailPassword(home: () -> Unit) = viewModelScope.launch {
-        val email = _email.value.toString()
-        val password = _password.value.toString()
-
-        Log.i("aplicacion", "$email, $password")
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-            if (it.isSuccessful) {
-                Log.i("aplicacion", "logeado correctamente")
-                home()
-            } else {
-                Log.i("aplicacion", "logeado incorrectamente: ${it.exception}")
-                _errorMessage.value = "Mail o contraseña incorrectos"
-                clearError()
-            }
-        }
-    }
-
     private val _email = MutableLiveData<String>()
     val email: LiveData<String> = _email
 
@@ -54,9 +27,6 @@ class LoginViewModel : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
-
-    private val _passwordVisibility = MutableLiveData<Boolean>()
-    val passwordVisibility : LiveData<Boolean> = _passwordVisibility
 
     fun onLoginChanged(email: String, password: String) {
         _email.value = email
@@ -71,14 +41,47 @@ class LoginViewModel : ViewModel() {
         signInEmailPassword { navController.navigate(NavigationScreens.HomeScreen.route) }
     }
 
-    fun togglePasswordVisibility() {
-        _passwordVisibility.value = _passwordVisibility.value?.not() ?: true
-    }
-
     private fun isValidEmail(email: String): Boolean =
         Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
     private fun isValidPassword(password: String): Boolean =
         password.length in 6..50
+
+    // PASSWORD VISIBILITY
+
+    private val _passwordVisibility = MutableLiveData<Boolean>()
+    val passwordVisibility : LiveData<Boolean> = _passwordVisibility
+
+    fun togglePasswordVisibility() {
+        _passwordVisibility.value = _passwordVisibility.value?.not() ?: true
+    }
+
+
+    // FIREBASE
+
+    private val auth: FirebaseAuth = Firebase.auth
+
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
+
+    fun clearError() {
+        _errorMessage.value = ""
+    }
+
+    private fun signInEmailPassword(home: () -> Unit) = viewModelScope.launch {
+        val email = _email.value.toString()
+        val password = _password.value.toString()
+
+        Log.i("aplicacion", "$email, $password")
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Log.i("aplicacion", "logeado correctamente")
+                home()
+            } else {
+                Log.i("aplicacion", "logeado incorrectamente: ${it.exception}")
+                _errorMessage.value = "Mail o contraseña incorrectos"
+            }
+        }
+    }
 
 }

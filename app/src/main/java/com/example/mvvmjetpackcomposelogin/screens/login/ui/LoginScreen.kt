@@ -43,7 +43,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -66,20 +65,21 @@ fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
             .background(bgPrincipal)
             .padding(16.dp)
     ) {
-        LoginP(viewModel, navController)
+        Login(viewModel, navController)
     }
 }
 
 @Composable
-fun LoginP(viewModel: LoginViewModel, navController: NavController) {
+fun Login(viewModel: LoginViewModel, navController: NavController) {
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
+    val passwordVisibility by viewModel.passwordVisibility.observeAsState(initial = false)
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
+
 
     val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
     val errorMessage: String by viewModel.errorMessage.observeAsState(initial = "")
 
-    val passwordVisibility by viewModel.passwordVisibility.observeAsState(initial = false)
 
     val context = LocalContext.current
 
@@ -90,8 +90,10 @@ fun LoginP(viewModel: LoginViewModel, navController: NavController) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
     } else {
-        if (errorMessage != "")
+        if (errorMessage != ""){
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+            viewModel.clearError()
+        }
         Column {
             Welcome()
             Spacer(modifier = Modifier.height(16.dp))
@@ -121,7 +123,7 @@ fun LoginP(viewModel: LoginViewModel, navController: NavController) {
 
 @Composable
 fun Welcome() {
-    Text(text = "Welcome", color = Color.White, fontSize = 32.sp)
+    Text(text = "Welcome", color = Color.White, fontSize = 24.sp)
 }
 
 @Composable
@@ -153,7 +155,6 @@ fun RegisterBox(navController: NavController) {
     }
 }
 
-@Preview
 @Composable
 fun LoginBox() {
     Card(
@@ -293,7 +294,6 @@ fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
     }
 }
 
-@Preview
 @Composable
 fun TermsOfUse(){
     Text( buildAnnotatedString {

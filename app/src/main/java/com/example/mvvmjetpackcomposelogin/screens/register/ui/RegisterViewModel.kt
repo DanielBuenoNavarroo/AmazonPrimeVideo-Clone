@@ -22,7 +22,7 @@ class RegisterViewModel {
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
-    private fun clearError() {
+    fun clearError() {
         _error.value = ""
     }
 
@@ -95,5 +95,14 @@ class RegisterViewModel {
         Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
     private fun isValidPassword(password: String): Boolean = password.length >= 6
+
+    // PASSWORD VISIBILITY
+
+    private val _passwordVisibility = MutableLiveData<Boolean>()
+    val passwordVisibility : LiveData<Boolean> = _passwordVisibility
+
+    fun togglePasswordVisibility() {
+        _passwordVisibility.value = _passwordVisibility.value?.not() ?: true
+    }
 
 }

@@ -4,135 +4,171 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.mvvmjetpackcomposelogin.R
 import com.example.mvvmjetpackcomposelogin.navegacion.NavigationScreens
-import com.example.mvvmjetpackcomposelogin.ui.theme.ForgotPasswordTextColor
-import com.example.mvvmjetpackcomposelogin.ui.theme.LoginButtonContainer
-import com.example.mvvmjetpackcomposelogin.ui.theme.LoginButtonContainerDisabled
-import com.example.mvvmjetpackcomposelogin.ui.theme.TextFieldContainerColor
 import com.example.mvvmjetpackcomposelogin.ui.theme.TextFieldTextColor
+import com.example.mvvmjetpackcomposelogin.ui.theme.azulPrincipal
 import com.example.mvvmjetpackcomposelogin.ui.theme.bgPrincipal
+import com.example.mvvmjetpackcomposelogin.ui.theme.botonDisabled
+import com.example.mvvmjetpackcomposelogin.ui.theme.linksColor
+import com.example.mvvmjetpackcomposelogin.ui.theme.textColor
 import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
     Box(
         Modifier
-            .fillMaxSize().background(bgPrincipal)
+            .fillMaxSize()
+            .background(bgPrincipal)
             .padding(16.dp)
     ) {
-        Register(Modifier.align(Alignment.Center), viewModel, navController)
+        Register(viewModel, navController)
     }
 }
 
 @Composable
-fun Register(modifier: Modifier, viewModel: RegisterViewModel, navController: NavController) {
+fun Register(viewModel: RegisterViewModel, navController: NavController) {
 
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
     val regsterEnable: Boolean by viewModel.registerEnable.observeAsState(initial = false)
-
+    val passwordVisibility by viewModel.passwordVisibility.observeAsState(initial = false)
     val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
 
     val errorMessage : String by viewModel.errorMessage.observeAsState( initial = "")
 
     val context = LocalContext.current
 
-    val corroutineScope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
 
     if (isLoading) {
         Box(Modifier.fillMaxSize()) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
     } else {
-        if (errorMessage != "")
+        if (errorMessage != ""){
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-        Column(modifier = modifier) {
-            HeaderImage(Modifier.align(Alignment.CenterHorizontally))
-            Spacer(modifier = Modifier.padding(16.dp))
-            EmailField(email) { viewModel.onRegisterChanged(it, password) }
-            Spacer(modifier = Modifier.padding(4.dp))
-            PaswordField(password) { viewModel.onRegisterChanged(email, it) }
-            Spacer(modifier = Modifier.padding(8.dp))
-            ForgotPassword(Modifier.align(Alignment.End), navController)
-            Spacer(modifier = Modifier.padding(16.dp))
-            LoginButton(regsterEnable) {
-                corroutineScope.launch {
+            viewModel.clearError()
+        }
+
+        Column {
+            Welcome()
+            Spacer(modifier = Modifier.height(16.dp))
+            RegisterBox()
+            Mail(email) { viewModel.onRegisterChanged(it, password) }
+            Password(
+                password = password,
+                passwordVisibility = passwordVisibility,
+                onTextFieldChanged = { viewModel.onRegisterChanged(email, it) },
+                toglePasswordVisibility = { viewModel.togglePasswordVisibility() }
+            )
+            RegisterButton(regsterEnable) {
+                coroutineScope.launch {
                     viewModel.onRegisterSelected(navController)
                 }
             }
+            TermsOfUse()
+            LoginBox(navController)
         }
     }
-
 }
 
 @Composable
-fun HeaderImage(modifier: Modifier) {
-    Image(
-        painter = painterResource(id = R.mipmap.logo),
-        contentDescription = null,
-        modifier = modifier
-    )
+fun Welcome() {
+    Text(text = "Welcome", color = Color.White, fontSize = 24.sp)
 }
 
 @Composable
-fun EmailField(email: String, onTextFieldChanged: (String) -> Unit) {
+fun RegisterBox() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp),
+        shape = RoundedCornerShape(4.dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(bgPrincipal),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.width(16.dp))
+            Image(
+                painter = painterResource(id = R.drawable.twotone_circle_24),
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(text = "Create account", fontWeight = FontWeight.Bold, color = Color.White)
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(text = "New to Amaclon?", fontWeight = FontWeight.Normal, color = Color.White)
+        }
+    }
+}
+
+@Composable
+fun Mail(email: String, onTextFieldChanged: (String) -> Unit) {
     TextField(
         value = email,
         onValueChange = { onTextFieldChanged(it) },
         modifier = Modifier
-            .fillMaxWidth()
-            .background(TextFieldContainerColor),
+            .fillMaxWidth(),
         placeholder = {
             Text(
                 text = "Email"
             )
         },
+        label = { Text(text = "Email") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         singleLine = true,
         maxLines = 1,
         colors = TextFieldDefaults.colors(
-            focusedTextColor = Color.LightGray,
-            unfocusedTextColor = Color.LightGray,
+            unfocusedContainerColor = Color.White,
+            focusedContainerColor = Color.White,
+            focusedTextColor = Color.DarkGray,
+            unfocusedTextColor = Color.DarkGray,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
         )
@@ -140,73 +176,131 @@ fun EmailField(email: String, onTextFieldChanged: (String) -> Unit) {
 }
 
 @Composable
-fun PaswordField(password: String, onTextFieldChanged: (String) -> Unit) {
-
-    var passwordVisibility by remember { mutableStateOf(false) }
-
-    TextField(
-        value = password,
-        onValueChange = { onTextFieldChanged(it) },
-        placeholder = {
-            Text(
-                text = "Contraseña"
+fun Password(
+    password: String,
+    passwordVisibility: Boolean,
+    onTextFieldChanged: (String) -> Unit,
+    toglePasswordVisibility: () -> Unit
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        TextField(
+            value = password,
+            onValueChange = { onTextFieldChanged(it) },
+            placeholder = {
+                Text(
+                    text = "Password"
+                )
+            },
+            label = { Text(text = "Password") },
+            modifier = Modifier
+                .fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            singleLine = true,
+            maxLines = 1,
+            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White,
+                focusedTextColor = TextFieldTextColor,
+                unfocusedTextColor = TextFieldTextColor,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
             )
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(TextFieldContainerColor),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        singleLine = true,
-        maxLines = 1,
-        visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-        colors = TextFieldDefaults.colors(
-            focusedTextColor = TextFieldTextColor,
-            unfocusedTextColor = TextFieldTextColor,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
-        ),
-        trailingIcon = {
-            IconButton(
-                onClick = {
-                    passwordVisibility = !passwordVisibility
-                }
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        PasswordBottom(passwordVisibility, toglePasswordVisibility)
+    }
+}
+
+@Composable
+fun PasswordBottom(passwordVisibility: Boolean, togglePasswordVisibility: () -> Unit) {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Box(Modifier.weight(1f)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable { togglePasswordVisibility() }
             ) {
                 Icon(
-                    imageVector = if (passwordVisibility) Icons.Default.CheckCircle else Icons.Default.Check,
-                    contentDescription = null
+                    imageVector = if (passwordVisibility) Icons.Default.CheckCircle else Icons.Default.Clear,
+                    contentDescription = null,
+                    tint = if (passwordVisibility) Color.Green else Color.Red,
+
+                    )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Show password",
+                    color = Color.White
                 )
             }
         }
-    )
+        Text(
+            text = "Forgot password?",
+            color = azulPrincipal,
+            modifier = Modifier.align(Alignment.CenterVertically)
+        )
+    }
 }
 
 @Composable
-fun ForgotPassword(modifier: Modifier, navController: NavController) {
-    Text(
-        text = "Ya tienes cuenta?",
-        modifier = modifier.clickable { navController.navigate(NavigationScreens.LoginScreen.route) },
-        fontSize = 12.sp,
-        fontWeight = FontWeight.Bold,
-        color = ForgotPasswordTextColor
-    )
-}
-
-@Composable
-fun LoginButton(registeEnable: Boolean, onRegisterSelected: () -> Unit) {
+fun RegisterButton(registerEnable: Boolean, onRegisterSelected: () -> Unit) {
     Button(
         onClick = { onRegisterSelected() },
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = LoginButtonContainer,
-            disabledContainerColor = LoginButtonContainerDisabled,
+            containerColor = azulPrincipal,
+            disabledContainerColor = botonDisabled,
             contentColor = Color.White,
             disabledContentColor = Color.White
         ),
-        shape = RoundedCornerShape(8.dp),
-        enabled = registeEnable
+        shape = RoundedCornerShape(2.dp),
+        enabled = registerEnable
     ) {
-        Text(text = "Registrar Usuario")
+        Text(text = "Continue")
+    }
+}
+
+@Composable
+fun TermsOfUse(){
+    Text( buildAnnotatedString {
+        withStyle(style = SpanStyle(color = textColor)){
+            append("By signing in, you agree to the")
+        }
+        append("  ")
+        withStyle(style = SpanStyle(color = linksColor)){
+            append("Prime Video Terms of Use")
+        }
+        append("  ")
+        withStyle(style = SpanStyle(color = textColor)){
+            append("and license agreements which can be found on the Amazon website.")
+        }
+    } )
+}
+
+@Composable
+fun LoginBox(navController: NavController) {
+    Card(
+        modifier = Modifier
+            .clickable { navController.navigate(NavigationScreens.LoginScreen.route) }
+            .fillMaxWidth()
+            .height(50.dp),
+        shape = RoundedCornerShape(2.dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(bgPrincipal),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.width(16.dp))
+            Image(
+                painter = painterResource(id = R.drawable.baseline_circle_24),
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(text = "Sign in Already a customer?", color = Color.White)
+        }
     }
 }
