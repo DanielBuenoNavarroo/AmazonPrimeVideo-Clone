@@ -76,7 +76,6 @@ fun Login(viewModel: LoginViewModel, navController: NavController) {
     val passwordVisibility by viewModel.passwordVisibility.observeAsState(initial = false)
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
 
-
     val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
     val errorMessage: String by viewModel.errorMessage.observeAsState(initial = "")
 
@@ -132,9 +131,11 @@ fun RegisterBox(navController: NavController) {
         modifier = Modifier
             .clickable { navController.navigate(NavigationScreens.RegisterScreen.route) }
             .fillMaxWidth()
-            .background(noSeleccionado)
             .height(50.dp)
             .clip(RoundedCornerShape(4.dp))
+            .background(noSeleccionado)
+
+
     ) {
         Row(
             modifier = Modifier

@@ -132,7 +132,6 @@ fun RegisterBox() {
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
-            .clip(RoundedCornerShape(4.dp))
     ) {
         Row(
             modifier = Modifier
@@ -289,9 +288,8 @@ fun LoginBox(navController: NavController) {
         modifier = Modifier
             .clickable { navController.navigate(NavigationScreens.LoginScreen.route) }
             .fillMaxWidth()
-            .height(50.dp)
+            .height(50.dp).clip(RoundedCornerShape(4.dp))
             .background(noSeleccionado)
-            .clip(RoundedCornerShape(4.dp))
     ) {
         Row(
             modifier = Modifier
