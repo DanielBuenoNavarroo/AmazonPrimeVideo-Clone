@@ -10,4 +10,6 @@ sealed class NavigationScreens(val route: String) {
 
     data object HomeScreen : NavigationScreens("/home")
 
+    data object ProfileCreationScreen : NavigationScreens("/profile-creation")
+
 }

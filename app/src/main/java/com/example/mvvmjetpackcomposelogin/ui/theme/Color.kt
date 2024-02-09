@@ -15,15 +15,6 @@ val bgPrincipal = Color(0xE9030924)
 val azulPrincipal = Color(0xFF0B7196)
 val linksColor = Color(0xFF1577B8)
 val textColor = Color(0xFF7D868A)
-
-val botonDisabled = Color(0xFF48ACCF)
-
+val botonDisabled = Color(0xFFCF7E48)
 val noSeleccionado = Color(0xFF333352)
-
 val TextFieldTextColor = Color(0xFF222222)
-val TextFieldContainerColor = Color(0xFFDEDDDD)
-
-val ForgotPasswordTextColor = Color(0xFFFB9600)
-
-val LoginButtonContainer = Color(0xFFFF4303)
-val LoginButtonContainerDisabled = Color(0xFFF78058)

@@ -27,7 +27,7 @@ fun SplashScreen(navController: NavController) {
         if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
             navController.navigate(NavigationScreens.LoginScreen.route)
         }else{
-            navController.navigate(NavigationScreens.HomeScreen.route)
+            navController.navigate(NavigationScreens.ProfileCreationScreen.route)
         }
     }
     Column(

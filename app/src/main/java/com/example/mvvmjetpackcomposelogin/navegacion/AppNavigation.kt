@@ -8,6 +8,7 @@ import com.example.mvvmjetpackcomposelogin.screens.SplashScreen
 import com.example.mvvmjetpackcomposelogin.screens.home.ui.HomeScreen
 import com.example.mvvmjetpackcomposelogin.screens.login.ui.LoginScreen
 import com.example.mvvmjetpackcomposelogin.screens.login.ui.LoginViewModel
+import com.example.mvvmjetpackcomposelogin.screens.profilecreation.ui.ProfileCreationScreen
 import com.example.mvvmjetpackcomposelogin.screens.register.ui.RegisterScreen
 import com.example.mvvmjetpackcomposelogin.screens.register.ui.RegisterViewModel
 
@@ -30,6 +31,9 @@ fun AppNavigation() {
         }
         composable(route = NavigationScreens.HomeScreen.route){
             HomeScreen(navController)
+        }
+        composable(route = NavigationScreens.ProfileCreationScreen.route){
+            ProfileCreationScreen()
         }
     }
 }

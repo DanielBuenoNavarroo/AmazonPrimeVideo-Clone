@@ -74,6 +74,7 @@ fun Register(viewModel: RegisterViewModel, navController: NavController) {
 
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
+    val confirmPassword : String by viewModel.confirmPassword.observeAsState(initial = "")
     val regsterEnable: Boolean by viewModel.registerEnable.observeAsState(initial = false)
     val passwordVisibility by viewModel.passwordVisibility.observeAsState(initial = false)
     val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
@@ -96,26 +97,32 @@ fun Register(viewModel: RegisterViewModel, navController: NavController) {
 
         Column {
             Welcome()
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
             RegisterBox()
-            Spacer(modifier = Modifier.height(16.dp))
-            Mail(email) { viewModel.onRegisterChanged(it, password) }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
+            Mail(email) { viewModel.onEmailChanged(it) }
+            Spacer(Modifier.height(16.dp))
             Password(
                 password = password,
                 passwordVisibility = passwordVisibility,
-                onTextFieldChanged = { viewModel.onRegisterChanged(email, it) },
-                toglePasswordVisibility = { viewModel.togglePasswordVisibility() }
+                onTextFieldChanged = { viewModel.onPasswordChanged(it) },
             )
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(Modifier.height(16.dp))
+            ConfirmPassword(
+                password = confirmPassword,
+                passwordVisibility = passwordVisibility,
+                onTextFieldChanged = {viewModel.onConfirmPasswordChanged(it)},
+                toglePasswordVisibility = { viewModel.togglePasswordVisibility()}
+            )
+            Spacer(Modifier.height(32.dp))
             RegisterButton(regsterEnable) {
                 coroutineScope.launch {
                     viewModel.onRegisterSelected(navController)
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
             TermsOfUse()
-            Spacer(modifier = Modifier.height(64.dp))
+            Spacer(Modifier.height(64.dp))
             LoginBox(navController)
         }
     }
@@ -183,8 +190,7 @@ fun Mail(email: String, onTextFieldChanged: (String) -> Unit) {
 fun Password(
     password: String,
     passwordVisibility: Boolean,
-    onTextFieldChanged: (String) -> Unit,
-    toglePasswordVisibility: () -> Unit
+    onTextFieldChanged: (String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         TextField(
@@ -211,9 +217,38 @@ fun Password(
                 unfocusedIndicatorColor = Color.Transparent
             )
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        PasswordBottom(passwordVisibility, toglePasswordVisibility)
     }
+}
+
+@Composable
+fun ConfirmPassword(password: String,
+                    passwordVisibility: Boolean,
+                    onTextFieldChanged: (String) -> Unit,
+                    toglePasswordVisibility: () -> Unit){
+    TextField(value = password, onValueChange = {onTextFieldChanged(it)},
+        modifier = Modifier
+            .fillMaxWidth(),
+        placeholder = {
+            Text(
+                text = "Confirm Password"
+            )
+        },
+        label = { Text(text = "Confirm Password") },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+        singleLine = true,
+        maxLines = 1,
+        visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+        colors = TextFieldDefaults.colors(
+            unfocusedContainerColor = Color.White,
+            focusedContainerColor = Color.White,
+            focusedTextColor = TextFieldTextColor,
+            unfocusedTextColor = TextFieldTextColor,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        )
+    )
+    Spacer(modifier = Modifier.height(16.dp))
+    PasswordBottom(passwordVisibility, toglePasswordVisibility)
 }
 
 @Composable
@@ -288,7 +323,8 @@ fun LoginBox(navController: NavController) {
         modifier = Modifier
             .clickable { navController.navigate(NavigationScreens.LoginScreen.route) }
             .fillMaxWidth()
-            .height(50.dp).clip(RoundedCornerShape(4.dp))
+            .height(50.dp)
+            .clip(RoundedCornerShape(4.dp))
             .background(noSeleccionado)
     ) {
         Row(

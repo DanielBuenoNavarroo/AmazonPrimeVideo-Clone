@@ -15,6 +15,68 @@ import kotlinx.coroutines.delay
 
 class RegisterViewModel {
 
+    private val _email = MutableLiveData<String>()
+    val email: LiveData<String> = _email
+
+    private val _password = MutableLiveData<String>()
+    val password: LiveData<String> = _password
+
+    private val _confirmPassword = MutableLiveData<String>()
+    val confirmPassword: LiveData<String> = _confirmPassword
+
+    private val _registerEnable = MutableLiveData<Boolean>()
+    val registerEnable: LiveData<Boolean> = _registerEnable
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    fun onEmailChanged(email: String) {
+        _email.value = email
+        _registerEnable.value = isValidEmail(email) &&
+                isValidPassword(password.value ?: "") &&
+                isSamePassword(password.value ?: "", confirmPassword.value ?: "")
+    }
+
+    fun onPasswordChanged(password: String) {
+        _password.value = password
+        _registerEnable.value = isValidEmail(email.value ?: "") &&
+                isValidPassword(password) &&
+                isSamePassword(password, confirmPassword.value ?: "")
+    }
+
+    fun onConfirmPasswordChanged(confirmPassword: String) {
+        _confirmPassword.value = confirmPassword
+        _registerEnable.value = isValidEmail(email.value ?: "") &&
+                isValidPassword(password.value ?: "") &&
+                isSamePassword(password.value ?: "", confirmPassword)
+    }
+
+    suspend fun onRegisterSelected(navController: NavController) {
+        _isLoading.value = true
+        delay(2000)
+        createUserEmailPassword { navController.navigate(NavigationScreens.HomeScreen.route) }
+        _isLoading.value = false
+    }
+
+    private fun isValidEmail(email: String): Boolean =
+        Patterns.EMAIL_ADDRESS.matcher(email).matches()
+
+    private fun isValidPassword(password: String): Boolean = password.length in 6..50
+
+    private fun isSamePassword(password: String, confirmPassword: String): Boolean =
+        password == confirmPassword
+
+    // PASSWORD VISIBILITY
+
+    private val _passwordVisibility = MutableLiveData<Boolean>()
+    val passwordVisibility: LiveData<Boolean> = _passwordVisibility
+
+    fun togglePasswordVisibility() {
+        _passwordVisibility.value = _passwordVisibility.value?.not() ?: true
+    }
+
+    // FIREBASE
+
     private val auth: FirebaseAuth = Firebase.auth
     private val _loading = MutableLiveData(false)
 
@@ -48,12 +110,15 @@ class RegisterViewModel {
     }
 
     private fun createUser() {
+
         val userId = auth.currentUser?.uid
+        val email = auth.currentUser?.email
+        val nombre = email?.split('@')?.first()
 
         val user = User(
             userId = userId.toString(),
-            nombre = "",
-            apellido = "",
+            mail = email.toString(),
+            nombre = nombre.toString(),
             id = null
         ).toMap()
 
@@ -64,45 +129,6 @@ class RegisterViewModel {
             }.addOnFailureListener {
                 Log.i("aplicacion", "Error: $it")
             }
-    }
-
-    private val _email = MutableLiveData<String>()
-    val email: LiveData<String> = _email
-
-    private val _password = MutableLiveData<String>()
-    val password: LiveData<String> = _password
-
-    private val _registerEnable = MutableLiveData<Boolean>()
-    val registerEnable: LiveData<Boolean> = _registerEnable
-
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
-
-    fun onRegisterChanged(email: String, password: String) {
-        _email.value = email
-        _password.value = password
-        _registerEnable.value = isValidEmail(email) && isValidPassword(password)
-    }
-
-    suspend fun onRegisterSelected(navController: NavController) {
-        _isLoading.value = true
-        delay(2000)
-        _isLoading.value = false
-        createUserEmailPassword { navController.navigate(NavigationScreens.LoginScreen.route) }
-    }
-
-    private fun isValidEmail(email: String): Boolean =
-        Patterns.EMAIL_ADDRESS.matcher(email).matches()
-
-    private fun isValidPassword(password: String): Boolean = password.length >= 6
-
-    // PASSWORD VISIBILITY
-
-    private val _passwordVisibility = MutableLiveData<Boolean>()
-    val passwordVisibility : LiveData<Boolean> = _passwordVisibility
-
-    fun togglePasswordVisibility() {
-        _passwordVisibility.value = _passwordVisibility.value?.not() ?: true
     }
 
 }

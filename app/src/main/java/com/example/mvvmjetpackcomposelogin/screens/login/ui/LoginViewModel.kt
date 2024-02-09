@@ -37,8 +37,8 @@ class LoginViewModel : ViewModel() {
     suspend fun onLoginSelected(navController: NavController) {
         _isLoading.value = true
         delay(2000)
+        signInEmailPassword { navController.navigate(NavigationScreens.ProfileCreationScreen.route) }
         _isLoading.value = false
-        signInEmailPassword { navController.navigate(NavigationScreens.HomeScreen.route) }
     }
 
     private fun isValidEmail(email: String): Boolean =
