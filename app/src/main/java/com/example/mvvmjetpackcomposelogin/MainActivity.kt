@@ -15,7 +15,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MVVMJetpackComposeLoginTheme {
-
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -26,4 +25,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-

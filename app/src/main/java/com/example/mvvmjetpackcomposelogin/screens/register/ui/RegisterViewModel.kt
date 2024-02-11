@@ -5,7 +5,7 @@ import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
-import com.example.mvvmjetpackcomposelogin.model.User
+import com.example.mvvmjetpackcomposelogin.data.model.User
 import com.example.mvvmjetpackcomposelogin.navegacion.NavigationScreens
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth

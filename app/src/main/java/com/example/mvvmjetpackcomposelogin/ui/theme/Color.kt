@@ -18,3 +18,6 @@ val textColor = Color(0xFF7D868A)
 val botonDisabled = Color(0xFFCF7E48)
 val noSeleccionado = Color(0xFF333352)
 val TextFieldTextColor = Color(0xFF222222)
+
+// Profile Creation
+val ColorFieldTextContainer = Color(0xE9030A29)

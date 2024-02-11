@@ -1,4 +1,4 @@
-package com.example.mvvmjetpackcomposelogin.model
+package com.example.mvvmjetpackcomposelogin.data.model
 
 data class User(
     val id: String?,
