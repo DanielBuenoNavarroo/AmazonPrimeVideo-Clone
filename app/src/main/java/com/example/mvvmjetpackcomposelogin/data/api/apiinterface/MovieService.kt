@@ -11,7 +11,22 @@ interface MovieService {
     @GET("movie/top_rated")
     suspend fun getMoviesTopRated(
         @Query("api_key") apiKey: String,
-        @Query("language") language: String = "es-ES",
+        @Query("language") language: String = "en-US",
+        @Query("page") page: Int = 1
+    ) : MovieResponseList
+
+    @GET("movie/popular")
+    suspend fun getMoviesPopular(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "en-US",
+        @Query("page") page: Int = 1
+    ) : MovieResponseList
+
+    @GET("discover/movie")
+    suspend fun getMoviesByGenre(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "en-US",
+        @Query("with_genres") genreId: Int,
         @Query("page") page: Int = 1
     ) : MovieResponseList
 
@@ -19,7 +34,7 @@ interface MovieService {
     suspend fun getMovieById(
         @Path("movieId") movieId : Int,
         @Query("api_key") apiKey: String,
-        @Query("language") language: String = "es-ES",
+        @Query("language") language: String = "en-US",
     ) : SingleMovieModel
 }
 

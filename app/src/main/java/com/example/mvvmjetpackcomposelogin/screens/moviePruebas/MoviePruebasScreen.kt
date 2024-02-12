@@ -5,11 +5,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
@@ -26,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.mvvmjetpackcomposelogin.CONSTANTES.ApiKey
+import com.example.mvvmjetpackcomposelogin.data.api.ListaGeneros
 import com.example.mvvmjetpackcomposelogin.data.api.model.MoviesModel
 import com.example.mvvmjetpackcomposelogin.data.api.retrofit.RetrofitClient
 import com.example.mvvmjetpackcomposelogin.navegacion.NavigationScreens
@@ -33,6 +36,8 @@ import com.example.mvvmjetpackcomposelogin.navegacion.NavigationScreens
 @Composable
 fun MoviePruebasScreen(navController: NavController) {
     var moviesTopRated by remember { mutableStateOf<List<MoviesModel>?>(null) }
+    var moviesPopular by remember { mutableStateOf<List<MoviesModel>?>(null) }
+    var moviesGenreTerror by remember { mutableStateOf<List<MoviesModel>?>(null) }
 
     LaunchedEffect(Unit) {
         val fetchedMovies = RetrofitClient.movieService.getMoviesTopRated(
@@ -41,9 +46,39 @@ fun MoviePruebasScreen(navController: NavController) {
         moviesTopRated = fetchedMovies
     }
 
-    moviesTopRated?.let { movieList ->
-        HorizontalCarousel(movieList = movieList, navController)
+    LaunchedEffect(Unit){
+        val fetchedMovies = RetrofitClient.movieService.getMoviesPopular(
+            apiKey = ApiKey.key
+        ).results
+        moviesPopular = fetchedMovies
     }
+
+    LaunchedEffect(Unit){
+        val fetchedMovies = RetrofitClient.movieService.getMoviesByGenre(
+            apiKey = ApiKey.key,
+            genreId = ListaGeneros.Comedy.id
+        ).results
+        moviesGenreTerror = fetchedMovies
+    }
+
+    LazyColumn(Modifier.fillMaxSize()){
+        item {
+            moviesTopRated?.let { movieList ->
+                HorizontalCarousel(movieList = movieList, navController)
+            }
+        }
+        item {
+            moviesPopular?.let { movieList ->
+                HorizontalCarousel(movieList = movieList, navController )
+            }
+        }
+        item {
+            moviesGenreTerror?.let { movieList ->
+                HorizontalCarousel(movieList = movieList, navController )
+            }
+        }
+    }
+
 }
 
 @Composable
@@ -51,7 +86,7 @@ fun HorizontalCarousel(movieList: List<MoviesModel>, navController: NavControlle
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .height(240.dp)
+            .height(300.dp)
     ) {
         items(movieList) { movie ->
             MovieItem(movie = movie, navController)
