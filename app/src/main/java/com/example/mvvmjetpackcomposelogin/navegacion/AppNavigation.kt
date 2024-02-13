@@ -10,6 +10,7 @@ import com.example.mvvmjetpackcomposelogin.screens.informacion.ui.InformationScr
 import com.example.mvvmjetpackcomposelogin.screens.login.ui.LoginScreen
 import com.example.mvvmjetpackcomposelogin.screens.login.ui.LoginViewModel
 import com.example.mvvmjetpackcomposelogin.screens.moviePruebas.MoviePruebasScreen
+import com.example.mvvmjetpackcomposelogin.screens.moviePruebas.PagPViewModel
 import com.example.mvvmjetpackcomposelogin.screens.profilecreation.ui.ProfileCreationScreen
 import com.example.mvvmjetpackcomposelogin.screens.register.ui.RegisterScreen
 import com.example.mvvmjetpackcomposelogin.screens.register.ui.RegisterViewModel
@@ -38,7 +39,7 @@ fun AppNavigation() {
             ProfileCreationScreen(navController)
         }
         composable(route = NavigationScreens.MoviePruebasScreen.route){
-            MoviePruebasScreen(navController)
+            MoviePruebasScreen(PagPViewModel(), navController)
         }
         composable(route = "${NavigationScreens.InformationScreen.route}/{movieId}") { backStackEntry ->
             val movieId = backStackEntry.arguments?.getString("movieId")?.toIntOrNull()

@@ -16,100 +16,79 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
-import com.example.mvvmjetpackcomposelogin.CONSTANTES.ApiKey
-import com.example.mvvmjetpackcomposelogin.data.api.ListaGeneros
 import com.example.mvvmjetpackcomposelogin.data.api.model.MoviesModel
-import com.example.mvvmjetpackcomposelogin.data.api.retrofit.RetrofitClient
-import com.example.mvvmjetpackcomposelogin.navegacion.NavigationScreens
 
 @Composable
-fun MoviePruebasScreen(navController: NavController) {
-    var moviesTopRated by remember { mutableStateOf<List<MoviesModel>?>(null) }
-    var moviesPopular by remember { mutableStateOf<List<MoviesModel>?>(null) }
-    var moviesGenreTerror by remember { mutableStateOf<List<MoviesModel>?>(null) }
+fun MoviePruebasScreen(viewModel: PagPViewModel, navController: NavController) {
 
-    LaunchedEffect(Unit) {
-        val fetchedMovies = RetrofitClient.movieService.getMoviesTopRated(
-            apiKey = ApiKey.key
-        ).results
-        moviesTopRated = fetchedMovies
-    }
+    val moviesTopRated by viewModel.moviesTopRated.observeAsState()
+    val moviesPopular by viewModel.moviesPopular.observeAsState()
+    val moviesGenreTerror by viewModel.moviesGenreTerror.observeAsState()
 
-    LaunchedEffect(Unit){
-        val fetchedMovies = RetrofitClient.movieService.getMoviesPopular(
-            apiKey = ApiKey.key
-        ).results
-        moviesPopular = fetchedMovies
-    }
-
-    LaunchedEffect(Unit){
-        val fetchedMovies = RetrofitClient.movieService.getMoviesByGenre(
-            apiKey = ApiKey.key,
-            genreId = ListaGeneros.Comedy.id
-        ).results
-        moviesGenreTerror = fetchedMovies
-    }
-
-    LazyColumn(Modifier.fillMaxSize()){
+    LazyColumn(Modifier.fillMaxSize()) {
         item {
             moviesTopRated?.let { movieList ->
-                HorizontalCarousel(movieList = movieList, navController)
+                HorizontalCarousel(movieList = movieList) { movieId ->
+                    viewModel.onItemSelected(navController, movieId)
+                }
             }
         }
         item {
             moviesPopular?.let { movieList ->
-                HorizontalCarousel(movieList = movieList, navController )
+                HorizontalCarousel(movieList = movieList) { movieId ->
+                    viewModel.onItemSelected(navController, movieId)
+                }
             }
         }
         item {
             moviesGenreTerror?.let { movieList ->
-                HorizontalCarousel(movieList = movieList, navController )
+                HorizontalCarousel(movieList = movieList) { movieId ->
+                    viewModel.onItemSelected(navController, movieId)
+                }
             }
         }
     }
-
 }
 
 @Composable
-fun HorizontalCarousel(movieList: List<MoviesModel>, navController: NavController) {
+fun HorizontalCarousel(movieList: List<MoviesModel>, onItemSelected: (Int) -> Unit) {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .height(300.dp)
     ) {
         items(movieList) { movie ->
-            MovieItem(movie = movie, navController)
+            MovieItem(movie = movie) {
+                onItemSelected(movie.id)
+            }
         }
     }
 }
 
 @Composable
-fun MovieItem(movie: MoviesModel, navController: NavController) {
+fun MovieItem(movie: MoviesModel, onItemSelected: () -> Unit) {
     Column(
         modifier = Modifier
+            .clickable(onClick = onItemSelected)
             .padding(8.dp)
     ) {
         Image(
             painter = rememberImagePainter(
-                data = "https://image.tmdb.org/t/p/original/${movie.backdropPath}",
-                builder = { crossfade(true) }
+                data = "https://image.tmdb.org/t/p/w500/${movie.backdropPath}",
+                builder = {
+                    crossfade(false)
+                }
             ),
             contentDescription = null,
             modifier = Modifier
-                .clickable {
-                    navController.navigate("${NavigationScreens.InformationScreen.route}/${movie.id}")
-                }
                 .size(160.dp, 240.dp)
                 .fillMaxWidth()
                 .aspectRatio(0.67f),
