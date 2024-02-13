@@ -12,7 +12,7 @@ sealed class NavigationScreens(val route: String) {
 
     data object ProfileCreationScreen : NavigationScreens("/profile-creation")
 
-    data object MoviePruebasScreen : NavigationScreens("/moviepruebas")
+    data object PagPScreen : NavigationScreens("/PagPScreen")
 
     data object InformationScreen : NavigationScreens("/information")
 

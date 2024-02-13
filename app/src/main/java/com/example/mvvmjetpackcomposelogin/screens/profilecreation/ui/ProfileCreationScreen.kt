@@ -56,7 +56,7 @@ fun ProfileCreationScreen(navController: NavController) {
             Foto()
             Spacer(modifier = Modifier.height(16.dp))
             NameField()
-            Button(onClick = { navController.navigate(NavigationScreens.MoviePruebasScreen.route) }) {
+            Button(onClick = { navController.navigate(NavigationScreens.PagPScreen.route) }) {
                 Text(text = "Peliculas")
             }
         }

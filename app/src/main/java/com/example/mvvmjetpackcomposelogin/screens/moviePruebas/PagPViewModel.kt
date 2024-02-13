@@ -30,7 +30,7 @@ class PagPViewModel : ViewModel() {
         }
     }
 
-    fun onItemSelected(navController: NavController, id : Int){
+    fun onItemSelected(navController: NavController, id: Any){
         navController.navigate("${NavigationScreens.InformationScreen.route}/$id")
     }
 

@@ -88,4 +88,7 @@ dependencies {
 
     // Coil para Jetpack Compose
     implementation ("io.coil-kt:coil-compose:1.4.0")
+
+    // Pager
+    implementation("androidx.paging:paging-compose:3.2.1")
 }
