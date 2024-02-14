@@ -8,6 +8,8 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MovieService {
+
+    //PELICULAS
     @GET("movie/top_rated")
     suspend fun getMoviesTopRated(
         @Query("api_key") apiKey: String,
@@ -35,7 +37,39 @@ interface MovieService {
         @Path("movieId") movieId : Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String = "en-US",
+        @Query("page") page: Int = 1
     ) : SingleMovieModel
+
+    // SERIES
+    @GET("tv/top_rated")
+    suspend fun getSeriesTopRated(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "en-US",
+        @Query("page") page: Int = 1
+    ) : MovieResponseList
+    @GET("tv/popular")
+    suspend fun getSeriesPopular(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "en-US",
+        @Query("page") page: Int = 1
+    ) : MovieResponseList
+
+    @GET("discover/tv")
+    suspend fun getSeriesByGenre(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "en-US",
+        @Query("with_genres") genreId: Int,
+        @Query("page") page: Int = 1
+    ) : MovieResponseList
+
+    @GET("tv/{tvId}")
+    suspend fun getSeriesById(
+        @Path("movieId") movieId : Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "en-US",
+        @Query("page") page: Int = 1
+    ) : SingleMovieModel
+
 }
 
 data class MovieResponseList(

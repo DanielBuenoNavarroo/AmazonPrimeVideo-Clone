@@ -1,6 +1,5 @@
 package com.example.mvvmjetpackcomposelogin.screens.moviePruebas
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,15 +19,20 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
@@ -35,68 +40,151 @@ import com.example.mvvmjetpackcomposelogin.R
 import com.example.mvvmjetpackcomposelogin.data.api.model.MoviesModel
 import com.example.mvvmjetpackcomposelogin.ui.theme.bgPagPrincipal
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PagPScreen(viewModel: PagPViewModel, navController: NavController) {
+
+    val showMoviesScreen by viewModel.moviesScreen.observeAsState(false)
+
     Column(
         Modifier
             .fillMaxSize()
             .background(bgPagPrincipal)
     ) {
         TopApp()
-        MoviePruebasScreen(viewModel, navController)
+        SelectBar(viewModel, showMoviesScreen)
+        Spacer(modifier = Modifier.height(6.dp))
+        MoviePruebasScreen(viewModel, navController, showMoviesScreen)
     }
 }
 
 @Composable
 fun TopApp() {
-    Row(modifier = Modifier.background(bgPagPrincipal)
-        .fillMaxWidth()
-        .height(64.dp).padding(horizontal = 20.dp),
+    Row(
+        modifier = Modifier
+            .background(bgPagPrincipal)
+            .fillMaxWidth()
+            .height(56.dp)
+            .padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             painter = painterResource(id = R.drawable.amazon_prime_video_logo),
             contentDescription = null,
-            modifier = Modifier.height(32.dp),
+            modifier = Modifier.height(24.dp),
             tint = Color.White
         )
         Icon(
             painter = painterResource(id = R.drawable.baseline_account_circle_24),
             contentDescription = null,
-            modifier = Modifier.size(40.dp),
+            modifier = Modifier.size(32.dp),
             tint = Color.White
         )
     }
 }
 
 @Composable
-fun MoviePruebasScreen(viewModel: PagPViewModel, navController: NavController) {
+fun SelectBar(viewModel: PagPViewModel, showMoviesScreen: Boolean) {
+    Row(
+        modifier = Modifier
+            .background(bgPagPrincipal)
+            .fillMaxWidth()
+            .height(40.dp)
+            .padding(horizontal = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Top
+    ) {
+        Text(
+            text = "Movies",
+            modifier = if (showMoviesScreen) Modifier
+                .clickable { viewModel.cambiarPeliculas() }
+                .clip(shape = CircleShape)
+                .background(Color.White)
+                .padding(horizontal = 12.dp, vertical = 6.dp) else Modifier
+                .clickable { viewModel.cambiarPeliculas() }
+                .clip(shape = CircleShape)
+                .padding(horizontal = 12.dp, vertical = 6.dp),
+            fontWeight = FontWeight.Bold,
+            color = if (showMoviesScreen) Color.Black else Color.White
+        )
+        Text(
+            text = "Series",
+            modifier = if (!showMoviesScreen) Modifier
+                .clickable { viewModel.cambiarSeries() }
+                .clip(shape = CircleShape)
+                .background(Color.White)
+                .padding(horizontal = 12.dp, vertical = 6.dp) else Modifier
+                .clickable { viewModel.cambiarSeries() }
+                .clip(shape = CircleShape)
+                .padding(horizontal = 12.dp, vertical = 6.dp),
+            fontWeight = FontWeight.Bold,
+            color = if (!showMoviesScreen) Color.Black else Color.White
+        )
+    }
+}
+
+@Composable
+fun MoviePruebasScreen(
+    viewModel: PagPViewModel,
+    navController: NavController,
+    showMoviesScreen: Boolean
+) {
 
     val moviesTopRated by viewModel.moviesTopRated.observeAsState()
     val moviesPopular by viewModel.moviesPopular.observeAsState()
     val moviesGenreTerror by viewModel.moviesGenreTerror.observeAsState()
 
-    LazyColumn(Modifier.fillMaxSize()) {
-        item {
-            moviesTopRated?.let { movieList ->
-                HorizontalImageSlider(movieList = movieList) { movieId ->
-                    viewModel.onItemSelected(navController, movieId)
+    val seriesTopRated by viewModel.seriesTopRated.observeAsState()
+    val seriesPopular by viewModel.seriesPopular.observeAsState()
+    val seriesGenreTerror by viewModel.seriesGenreMystery.observeAsState()
+
+    LazyColumn(
+        Modifier
+            .fillMaxSize()
+    ) {
+        if (showMoviesScreen) {
+            item {
+                moviesTopRated?.let { movieList ->
+                    HorizontalImageSlider(movieList = movieList) { movieId ->
+                        viewModel.onMovieSelected(navController, movieId)
+                    }
                 }
             }
-        }
-        item {
-            moviesPopular?.let { movieList ->
-                HorizontalCarousel(movieList = movieList) { movieId ->
-                    viewModel.onItemSelected(navController, movieId)
+            item {
+                moviesPopular?.let { movieList ->
+                    HorizontalCarousel(movieList = movieList) { movieId ->
+                        viewModel.onMovieSelected(navController, movieId)
+                    }
                 }
             }
-        }
-        item {
-            moviesGenreTerror?.let { movieList ->
-                HorizontalCarousel(movieList = movieList) { movieId ->
-                    viewModel.onItemSelected(navController, movieId)
+            item {
+                moviesGenreTerror?.let { movieList ->
+                    HorizontalCarousel(movieList = movieList) { movieId ->
+                        viewModel.onMovieSelected(navController, movieId)
+                    }
+                }
+            }
+        } else {
+            viewModel.loadSeries()
+            item {
+                seriesTopRated?.let { movieList ->
+                    HorizontalImageSlider(movieList = movieList) { movieId ->
+                        viewModel.onMovieSelected(navController, movieId)
+                    }
+                }
+            }
+            item {
+                seriesPopular?.let { movieList ->
+                    HorizontalCarousel(movieList = movieList) { movieId ->
+                        viewModel.onMovieSelected(navController, movieId)
+                    }
+                }
+            }
+            item {
+                seriesGenreTerror?.let { movieList ->
+                    HorizontalCarousel(movieList = movieList) { movieId ->
+                        viewModel.onMovieSelected(navController, movieId)
+                    }
                 }
             }
         }
@@ -105,7 +193,7 @@ fun MoviePruebasScreen(viewModel: PagPViewModel, navController: NavController) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HorizontalImageSlider(movieList: List<MoviesModel>, onItemSelected: (Int) -> Unit) {
+fun HorizontalImageSlider(movieList: List<MoviesModel>, onMovieSelected: (Int) -> Unit) {
     val pagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0f,
@@ -127,7 +215,7 @@ fun HorizontalImageSlider(movieList: List<MoviesModel>, onItemSelected: (Int) ->
                 ),
                 contentDescription = null,
                 modifier = Modifier
-                    .clickable { onItemSelected(movie.id) }
+                    .clickable { onMovieSelected(movie.id) }
                     .fillMaxWidth()
                     .aspectRatio(16f / 9f),
                 contentScale = ContentScale.Crop
@@ -137,25 +225,27 @@ fun HorizontalImageSlider(movieList: List<MoviesModel>, onItemSelected: (Int) ->
 }
 
 @Composable
-fun HorizontalCarousel(movieList: List<MoviesModel>, onItemSelected: (Int) -> Unit) {
+fun HorizontalCarousel(movieList: List<MoviesModel>, onMovieSelected: (Int) -> Unit) {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .height(240.dp)
+            .padding(horizontal = 15.dp)
     ) {
         items(movieList) { movie ->
             MovieItem(movie = movie) {
-                onItemSelected(movie.id)
+                onMovieSelected(movie.id)
             }
         }
     }
 }
 
 @Composable
-fun MovieItem(movie: MoviesModel, onItemSelected: () -> Unit) {
+fun MovieItem(movie: MoviesModel, onMovieSelected: () -> Unit) {
     Column(
         modifier = Modifier
-            .clickable(onClick = onItemSelected)
+            .clickable(onClick = onMovieSelected)
+            .padding(horizontal = 6.dp)
     ) {
         Image(
             painter = rememberImagePainter(
@@ -166,6 +256,7 @@ fun MovieItem(movie: MoviesModel, onItemSelected: () -> Unit) {
             ),
             contentDescription = null,
             modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
                 .size(width = 160.dp, height = 240.dp)
                 .fillMaxWidth()
                 .aspectRatio(0.67f),
