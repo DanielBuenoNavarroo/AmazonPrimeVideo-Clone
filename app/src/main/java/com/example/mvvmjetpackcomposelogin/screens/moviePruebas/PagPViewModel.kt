@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.mvvmjetpackcomposelogin.CONSTANTES.ApiKey
+import com.example.mvvmjetpackcomposelogin.data.MediaType
 import com.example.mvvmjetpackcomposelogin.data.api.ListaGenerosMovies
 import com.example.mvvmjetpackcomposelogin.data.api.ListaGenerosSeries
 import com.example.mvvmjetpackcomposelogin.data.api.model.MoviesModel
@@ -26,8 +27,8 @@ class PagPViewModel : ViewModel() {
         _moviesScreen.value = true
     }
 
-    fun onMovieSelected(navController: NavController, id: Any){
-        navController.navigate("${NavigationScreens.InformationScreen.route}/$id")
+    fun onItemSelected(navController: NavController, id: Any, mediaType: MediaType){
+        navController.navigate("${NavigationScreens.InformationScreen.route}/${mediaType.nombre}/$id")
     }
 
     // PELICULAS

@@ -34,16 +34,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.mvvmjetpackcomposelogin.R
+import com.example.mvvmjetpackcomposelogin.data.MediaType
 import com.example.mvvmjetpackcomposelogin.data.api.model.MoviesModel
 import com.example.mvvmjetpackcomposelogin.ui.theme.bgPagPrincipal
 
 @Composable
 fun PagPScreen(viewModel: PagPViewModel, navController: NavController) {
 
-    val showMoviesScreen by viewModel.moviesScreen.observeAsState(false)
+    val showMoviesScreen by viewModel.moviesScreen.observeAsState(true)
 
     Column(
         Modifier
@@ -138,52 +140,60 @@ fun MoviePruebasScreen(
     val seriesPopular by viewModel.seriesPopular.observeAsState()
     val seriesGenreTerror by viewModel.seriesGenreMystery.observeAsState()
 
+    var mediaType: MediaType
+
     LazyColumn(
         Modifier
             .fillMaxSize()
     ) {
         if (showMoviesScreen) {
+            mediaType = MediaType.Movie
             item {
                 moviesTopRated?.let { movieList ->
                     HorizontalImageSlider(movieList = movieList) { movieId ->
-                        viewModel.onMovieSelected(navController, movieId)
+                        viewModel.onItemSelected(navController, movieId, mediaType)
                     }
                 }
             }
             item {
+                TextoArriba(string = "Popular movies")
                 moviesPopular?.let { movieList ->
                     HorizontalCarousel(movieList = movieList) { movieId ->
-                        viewModel.onMovieSelected(navController, movieId)
+                        viewModel.onItemSelected(navController, movieId, mediaType)
                     }
                 }
             }
             item {
+                TextoArriba(string = "Horror movies")
                 moviesGenreTerror?.let { movieList ->
                     HorizontalCarousel(movieList = movieList) { movieId ->
-                        viewModel.onMovieSelected(navController, movieId)
+                        viewModel.onItemSelected(navController, movieId, mediaType)
                     }
                 }
             }
         } else {
             viewModel.loadSeries()
+            mediaType = MediaType.Serie
             item {
                 seriesTopRated?.let { movieList ->
                     HorizontalImageSlider(movieList = movieList) { movieId ->
-                        viewModel.onMovieSelected(navController, movieId)
+                        viewModel.onItemSelected(navController, movieId, mediaType)
                     }
                 }
             }
             item {
+                TextoArriba(string = "Popular TvShows")
                 seriesPopular?.let { movieList ->
                     HorizontalCarousel(movieList = movieList) { movieId ->
-                        viewModel.onMovieSelected(navController, movieId)
+                        viewModel.onItemSelected(navController, movieId, mediaType)
                     }
                 }
             }
             item {
+                TextoArriba(string = "Mystery TvShows")
                 seriesGenreTerror?.let { movieList ->
                     HorizontalCarousel(movieList = movieList) { movieId ->
-                        viewModel.onMovieSelected(navController, movieId)
+                        viewModel.onItemSelected(navController, movieId, mediaType)
                     }
                 }
             }
@@ -193,7 +203,7 @@ fun MoviePruebasScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HorizontalImageSlider(movieList: List<MoviesModel>, onMovieSelected: (Int) -> Unit) {
+fun HorizontalImageSlider(movieList: List<MoviesModel>, onItemSelected: (Int) -> Unit) {
     val pagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0f,
@@ -215,7 +225,7 @@ fun HorizontalImageSlider(movieList: List<MoviesModel>, onMovieSelected: (Int) -
                 ),
                 contentDescription = null,
                 modifier = Modifier
-                    .clickable { onMovieSelected(movie.id) }
+                    .clickable { onItemSelected(movie.id) }
                     .fillMaxWidth()
                     .aspectRatio(16f / 9f),
                 contentScale = ContentScale.Crop
@@ -225,7 +235,18 @@ fun HorizontalImageSlider(movieList: List<MoviesModel>, onMovieSelected: (Int) -
 }
 
 @Composable
-fun HorizontalCarousel(movieList: List<MoviesModel>, onMovieSelected: (Int) -> Unit) {
+fun TextoArriba(string: String) {
+    Text(
+        text = "$string >",
+        color = Color.Yellow,
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 4.dp).padding(horizontal = 20.dp)
+    )
+}
+
+@Composable
+fun HorizontalCarousel(movieList: List<MoviesModel>, onItemSelected: (Int) -> Unit) {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
@@ -234,7 +255,7 @@ fun HorizontalCarousel(movieList: List<MoviesModel>, onMovieSelected: (Int) -> U
     ) {
         items(movieList) { movie ->
             MovieItem(movie = movie) {
-                onMovieSelected(movie.id)
+                onItemSelected(movie.id)
             }
         }
     }

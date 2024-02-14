@@ -2,6 +2,7 @@ package com.example.mvvmjetpackcomposelogin.data.api.apiinterface
 
 import com.example.mvvmjetpackcomposelogin.data.api.model.MoviesModel
 import com.example.mvvmjetpackcomposelogin.data.api.model.SingleMovieModel
+import com.example.mvvmjetpackcomposelogin.data.api.model.SingleTvShowModel
 import com.google.gson.annotations.SerializedName
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -64,11 +65,11 @@ interface MovieService {
 
     @GET("tv/{tvId}")
     suspend fun getSeriesById(
-        @Path("movieId") movieId : Int,
+        @Path("tvId") tvId : Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String = "en-US",
         @Query("page") page: Int = 1
-    ) : SingleMovieModel
+    ) : SingleTvShowModel
 
 }
 
