@@ -32,11 +32,10 @@ fun InformationScreen(idItem: Int, mediaType: MediaType) {
     var movie by remember { mutableStateOf<SingleMovieModel?>(null) }
     var show by remember { mutableStateOf<SingleTvShowModel?>(null) }
 
-
     if (mediaType == MediaType.Movie) {
         LaunchedEffect(Unit) {
-            idItem.let {
-                val res = RetrofitClient.movieService.getMovieById(apiKey = ApiKey.key, movieId = it)
+            idItem.let {idMovie ->
+                val res = RetrofitClient.movieService.getMovieById(apiKey = ApiKey.key, movieId = idMovie)
                 movie = res
             }
         }

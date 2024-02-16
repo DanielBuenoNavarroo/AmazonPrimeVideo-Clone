@@ -53,9 +53,8 @@ class LoginViewModel : ViewModel() {
     val passwordVisibility : LiveData<Boolean> = _passwordVisibility
 
     fun togglePasswordVisibility() {
-        _passwordVisibility.value = _passwordVisibility.value!!
+        _passwordVisibility.value = _passwordVisibility.value?.not() ?: false
     }
-
 
     // FIREBASE
 
@@ -83,5 +82,4 @@ class LoginViewModel : ViewModel() {
             }
         }
     }
-
 }

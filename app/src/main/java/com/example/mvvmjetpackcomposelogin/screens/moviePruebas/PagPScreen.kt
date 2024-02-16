@@ -204,10 +204,11 @@ fun MoviePruebasScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HorizontalImageSlider(movieList: List<MoviesModel>, onItemSelected: (Int) -> Unit) {
+    val pageCount = movieList.size
     val pagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0f,
-        pageCount = { movieList.size }
+        pageCount = { pageCount }
     )
 
     Column {
@@ -234,54 +235,57 @@ fun HorizontalImageSlider(movieList: List<MoviesModel>, onItemSelected: (Int) ->
     }
 }
 
-@Composable
-fun TextoArriba(string: String) {
-    Text(
-        text = "$string >",
-        color = Color.Yellow,
-        fontSize = 20.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 4.dp).padding(horizontal = 20.dp)
-    )
-}
+    @Composable
+    fun TextoArriba(string: String) {
+        Text(
+            text = "$string >",
+            color = Color.Yellow,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp, bottom = 4.dp)
+                .padding(horizontal = 20.dp)
+        )
+    }
 
-@Composable
-fun HorizontalCarousel(movieList: List<MoviesModel>, onItemSelected: (Int) -> Unit) {
-    LazyRow(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(240.dp)
-            .padding(horizontal = 15.dp)
-    ) {
-        items(movieList) { movie ->
-            MovieItem(movie = movie) {
-                onItemSelected(movie.id)
+    @Composable
+    fun HorizontalCarousel(movieList: List<MoviesModel>, onItemSelected: (Int) -> Unit) {
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(240.dp)
+                .padding(horizontal = 15.dp)
+        ) {
+            items(movieList) { movie ->
+                MovieItem(movie = movie) {
+                    onItemSelected(movie.id)
+                }
             }
         }
     }
-}
 
-@Composable
-fun MovieItem(movie: MoviesModel, onMovieSelected: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .clickable(onClick = onMovieSelected)
-            .padding(horizontal = 6.dp)
-    ) {
-        Image(
-            painter = rememberImagePainter(
-                data = "https://image.tmdb.org/t/p/w342/${movie.posterPath}",
-                builder = {
-                    crossfade(false)
-                }
-            ),
-            contentDescription = null,
+    @Composable
+    fun MovieItem(movie: MoviesModel, onMovieSelected: () -> Unit) {
+        Column(
             modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
-                .size(width = 160.dp, height = 240.dp)
-                .fillMaxWidth()
-                .aspectRatio(0.67f),
-            contentScale = ContentScale.Crop
-        )
+                .clickable(onClick = onMovieSelected)
+                .padding(horizontal = 6.dp)
+        ) {
+            Image(
+                painter = rememberImagePainter(
+                    data = "https://image.tmdb.org/t/p/w342/${movie.posterPath}",
+                    builder = {
+                        crossfade(false)
+                    }
+                ),
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .size(width = 160.dp, height = 240.dp)
+                    .fillMaxWidth()
+                    .aspectRatio(0.67f),
+                contentScale = ContentScale.Crop
+            )
+        }
     }
-}

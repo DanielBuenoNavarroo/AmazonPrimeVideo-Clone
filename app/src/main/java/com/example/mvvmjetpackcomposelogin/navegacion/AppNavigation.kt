@@ -13,6 +13,7 @@ import com.example.mvvmjetpackcomposelogin.screens.login.ui.LoginViewModel
 import com.example.mvvmjetpackcomposelogin.screens.moviePruebas.PagPScreen
 import com.example.mvvmjetpackcomposelogin.screens.moviePruebas.PagPViewModel
 import com.example.mvvmjetpackcomposelogin.screens.profilecreation.ui.ProfileCreationScreen
+import com.example.mvvmjetpackcomposelogin.screens.profilecreation.ui.ProfileCreationViewModel
 import com.example.mvvmjetpackcomposelogin.screens.register.ui.RegisterScreen
 import com.example.mvvmjetpackcomposelogin.screens.register.ui.RegisterViewModel
 
@@ -37,7 +38,7 @@ fun AppNavigation() {
             HomeScreen(navController)
         }
         composable(route = NavigationScreens.ProfileCreationScreen.route) {
-            ProfileCreationScreen(navController)
+            ProfileCreationScreen(ProfileCreationViewModel(), navController)
         }
         composable(route = NavigationScreens.PagPScreen.route) {
             PagPScreen(PagPViewModel(), navController)

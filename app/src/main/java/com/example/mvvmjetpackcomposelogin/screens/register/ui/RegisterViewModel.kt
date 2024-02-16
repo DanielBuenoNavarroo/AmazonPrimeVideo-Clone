@@ -53,9 +53,8 @@ class RegisterViewModel {
 
     suspend fun onRegisterSelected(navController: NavController) {
         _isLoading.value = true
+        createUserEmailPassword { navController.navigate(NavigationScreens.ProfileCreationScreen.route) }
         delay(2000)
-        createUserEmailPassword { navController.navigate(NavigationScreens.HomeScreen.route) }
-        _isLoading.value = false
     }
 
     private fun isValidEmail(email: String): Boolean =
@@ -72,7 +71,7 @@ class RegisterViewModel {
     val passwordVisibility: LiveData<Boolean> = _passwordVisibility
 
     fun togglePasswordVisibility() {
-        _passwordVisibility.value = _passwordVisibility.value!!
+        _passwordVisibility.value = _passwordVisibility.value?.not() ?: false
     }
 
     // FIREBASE
@@ -105,7 +104,7 @@ class RegisterViewModel {
                     clearError()
                 }
             }
-            _loading.value = true
+            _loading.value = false
         }
     }
 
@@ -119,6 +118,7 @@ class RegisterViewModel {
             userId = userId.toString(),
             mail = email.toString(),
             nombre = nombre.toString(),
+            imagen = "",
             id = null
         ).toMap()
 
