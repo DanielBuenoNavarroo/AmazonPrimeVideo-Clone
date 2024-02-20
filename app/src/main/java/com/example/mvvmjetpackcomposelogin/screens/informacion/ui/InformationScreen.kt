@@ -22,14 +22,14 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.mvvmjetpackcomposelogin.CONSTANTES.ApiKey
 import com.example.mvvmjetpackcomposelogin.data.MediaType
-import com.example.mvvmjetpackcomposelogin.data.api.model.SingleMovieModel
+import com.example.mvvmjetpackcomposelogin.data.api.model.Movie
 import com.example.mvvmjetpackcomposelogin.data.api.model.SingleTvShowModel
 import com.example.mvvmjetpackcomposelogin.data.api.retrofit.RetrofitClient
 
 @Composable
 fun InformationScreen(idItem: Int, mediaType: MediaType) {
 
-    var movie by remember { mutableStateOf<SingleMovieModel?>(null) }
+    var movie by remember { mutableStateOf<Movie?>(null) }
     var show by remember { mutableStateOf<SingleTvShowModel?>(null) }
 
     if (mediaType == MediaType.Movie) {
@@ -45,7 +45,7 @@ fun InformationScreen(idItem: Int, mediaType: MediaType) {
                 Spacer(modifier = Modifier.height(16.dp))
                 movie?.let { ItemTitle(title = movie!!.title, releaseDate = it.releaseDate) }
                 Spacer(modifier = Modifier.height(8.dp))
-                movie?.let { ItemOverview(overview = it.overview) }
+                movie?.let { it.overview?.let { it1 -> ItemOverview(overview = it1) } }
                 Spacer(modifier = Modifier.height(8.dp))
                 ItemDetails(title = "Popularity", value = movie?.popularity.toString())
                 ItemDetails(title = "Runtime", value = "${movie?.runtime} minutes")
@@ -55,8 +55,6 @@ fun InformationScreen(idItem: Int, mediaType: MediaType) {
                         value = it.joinToString(", ") { it.name })
                 }
                 movie?.let { ItemDetails(title = "Status", value = it.status) }
-                ItemDetails(title = "Vote Average", value = movie?.voteAverage.toString())
-                ItemDetails(title = "Vote Count", value = movie?.voteCount.toString())
             }
         }
     } else {

@@ -1,4 +1,4 @@
-package com.example.mvvmjetpackcomposelogin.screens.moviePruebas
+package com.example.mvvmjetpackcomposelogin.screens.pagPrincipal
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -40,6 +40,7 @@ import coil.compose.rememberImagePainter
 import com.example.mvvmjetpackcomposelogin.R
 import com.example.mvvmjetpackcomposelogin.data.MediaType
 import com.example.mvvmjetpackcomposelogin.data.api.model.MoviesModel
+import com.example.mvvmjetpackcomposelogin.navegacion.NavigationScreens
 import com.example.mvvmjetpackcomposelogin.ui.theme.bgPagPrincipal
 
 @Composable
@@ -52,7 +53,7 @@ fun PagPScreen(viewModel: PagPViewModel, navController: NavController) {
             .fillMaxSize()
             .background(bgPagPrincipal)
     ) {
-        TopApp()
+        TopApp(viewModel, navController)
         SelectBar(viewModel, showMoviesScreen)
         Spacer(modifier = Modifier.height(6.dp))
         MoviePruebasScreen(viewModel, navController, showMoviesScreen)
@@ -60,7 +61,8 @@ fun PagPScreen(viewModel: PagPViewModel, navController: NavController) {
 }
 
 @Composable
-fun TopApp() {
+fun TopApp(viewModel: PagPViewModel, navController: NavController) {
+    val img by viewModel.imgP.observeAsState(initial = "")
     Row(
         modifier = Modifier
             .background(bgPagPrincipal)
@@ -76,12 +78,28 @@ fun TopApp() {
             modifier = Modifier.height(24.dp),
             tint = Color.White
         )
-        Icon(
-            painter = painterResource(id = R.drawable.baseline_account_circle_24),
-            contentDescription = null,
-            modifier = Modifier.size(32.dp),
-            tint = Color.White
-        )
+        if (img == ""){
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_account_circle_24),
+                contentDescription = null,
+                modifier = Modifier.size(32.dp).clickable { navController.navigate(NavigationScreens.ProfileScreen.route) },
+                tint = Color.White
+            )
+        } else {
+            Image(
+                painter = rememberImagePainter(
+                    data = img,
+                    builder = {
+                        crossfade(false)
+                    }),
+                contentDescription = null,
+                modifier = Modifier
+                    .clickable { navController.navigate(NavigationScreens.ProfileScreen.route) }
+                    .size(32.dp)
+                    .clip(shape = CircleShape),
+                contentScale = ContentScale.Crop
+            )
+        }
     }
 }
 
@@ -204,11 +222,13 @@ fun MoviePruebasScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HorizontalImageSlider(movieList: List<MoviesModel>, onItemSelected: (Int) -> Unit) {
-    val pageCount = movieList.size
+    val npeliculas = 10
+    val peliculas = movieList.take(npeliculas)
+
     val pagerState = rememberPagerState(
-        initialPage = 0,
+        initialPage = 500,
         initialPageOffsetFraction = 0f,
-        pageCount = { pageCount }
+        pageCount = { 1000 }
     )
 
     Column {
@@ -216,7 +236,7 @@ fun HorizontalImageSlider(movieList: List<MoviesModel>, onItemSelected: (Int) ->
             state = pagerState,
             modifier = Modifier.fillMaxWidth(),
         ) { page ->
-            val movie = movieList[page]
+            val movie = peliculas[page % npeliculas]
             Image(
                 painter = rememberImagePainter(
                     data = "https://image.tmdb.org/t/p/w500/${movie.backdropPath}",
@@ -232,60 +252,78 @@ fun HorizontalImageSlider(movieList: List<MoviesModel>, onItemSelected: (Int) ->
                 contentScale = ContentScale.Crop
             )
         }
-    }
-}
-
-    @Composable
-    fun TextoArriba(string: String) {
-        Text(
-            text = "$string >",
-            color = Color.Yellow,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
+        Spacer(modifier = Modifier.height(4.dp))
+        Row(
+            Modifier
                 .fillMaxWidth()
-                .padding(top = 12.dp, bottom = 4.dp)
-                .padding(horizontal = 20.dp)
-        )
-    }
-
-    @Composable
-    fun HorizontalCarousel(movieList: List<MoviesModel>, onItemSelected: (Int) -> Unit) {
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(240.dp)
-                .padding(horizontal = 15.dp)
+                .height(30.dp), horizontalArrangement = Arrangement.Center
         ) {
-            items(movieList) { movie ->
-                MovieItem(movie = movie) {
-                    onItemSelected(movie.id)
-                }
+            peliculas.forEachIndexed { index, _ ->
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_circle_24),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .height(10.dp)
+                        .padding(horizontal = 4.dp),
+                    tint = if (pagerState.currentPage % npeliculas != index) Color.Gray else Color.White
+                )
             }
         }
     }
+}
 
-    @Composable
-    fun MovieItem(movie: MoviesModel, onMovieSelected: () -> Unit) {
-        Column(
-            modifier = Modifier
-                .clickable(onClick = onMovieSelected)
-                .padding(horizontal = 6.dp)
-        ) {
-            Image(
-                painter = rememberImagePainter(
-                    data = "https://image.tmdb.org/t/p/w342/${movie.posterPath}",
-                    builder = {
-                        crossfade(false)
-                    }
-                ),
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .size(width = 160.dp, height = 240.dp)
-                    .fillMaxWidth()
-                    .aspectRatio(0.67f),
-                contentScale = ContentScale.Crop
-            )
+@Composable
+fun TextoArriba(string: String) {
+    Text(
+        text = "$string >",
+        color = Color.Yellow,
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp)
+            .padding(horizontal = 20.dp)
+    )
+}
+
+@Composable
+fun HorizontalCarousel(movieList: List<MoviesModel>, onItemSelected: (Int) -> Unit) {
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(240.dp)
+            .padding(horizontal = 15.dp)
+            .padding(bottom = 16.dp)
+    ) {
+        items(movieList) { movie ->
+            MovieItem(movie = movie) {
+                onItemSelected(movie.id)
+            }
         }
     }
+}
+
+@Composable
+fun MovieItem(movie: MoviesModel, onMovieSelected: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .clickable(onClick = onMovieSelected)
+            .padding(horizontal = 6.dp)
+    ) {
+        Image(
+            painter = rememberImagePainter(
+                data = "https://image.tmdb.org/t/p/w342/${movie.posterPath}",
+                builder = {
+                    crossfade(false)
+                }
+            ),
+            contentDescription = null,
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .size(width = 160.dp, height = 240.dp)
+                .fillMaxWidth()
+                .aspectRatio(0.67f),
+            contentScale = ContentScale.Crop
+        )
+    }
+}

@@ -23,7 +23,7 @@ import kotlinx.coroutines.delay
 fun SplashScreen(navController: NavController) {
 
     LaunchedEffect(key1 = true) {
-        delay(3500L)
+        delay(3000L)
         if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
             navController.navigate(NavigationScreens.LoginScreen.route)
         }else{

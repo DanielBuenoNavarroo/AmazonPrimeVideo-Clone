@@ -1,8 +1,8 @@
 package com.example.mvvmjetpackcomposelogin.data.api.apiinterface
 
+import com.example.mvvmjetpackcomposelogin.data.api.model.Movie
 import com.example.mvvmjetpackcomposelogin.data.api.model.MoviesModel
 import com.example.mvvmjetpackcomposelogin.data.api.model.PersonModel
-import com.example.mvvmjetpackcomposelogin.data.api.model.SingleMovieModel
 import com.example.mvvmjetpackcomposelogin.data.api.model.SingleTvShowModel
 import com.google.gson.annotations.SerializedName
 import retrofit2.http.GET
@@ -56,7 +56,15 @@ interface MovieService {
         @Query("api_key") apiKey: String,
         @Query("language") language: String = "en-US",
         @Query("page") page: Int = 1
-    ) : SingleMovieModel
+    ) : Movie
+
+    @GET("movie/{movieId}")
+    suspend fun getMovieByIdWithVideos(
+        @Path("movieId") movieId : Int,
+        @Query("api_key") apiKey: String,
+        @Query("append_to_response") appendToResponse: String = "videos",
+        @Query("language") language: String = "en-US"
+    ) : Movie
 
     // SERIES
     @GET("tv/top_rated")

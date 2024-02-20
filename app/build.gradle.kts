@@ -92,4 +92,7 @@ dependencies {
     // Pager
     implementation("androidx.paging:paging-compose:3.2.1")
     implementation("androidx.compose.foundation:foundation:1.6.1")
+
+    // Buffer
+    implementation("androidx.collection:collection-ktx:1.4.0")
 }

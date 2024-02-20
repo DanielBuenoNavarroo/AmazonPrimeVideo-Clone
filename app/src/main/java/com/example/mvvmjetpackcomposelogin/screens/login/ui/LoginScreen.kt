@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -76,7 +75,6 @@ fun Login(viewModel: LoginViewModel, navController: NavController) {
     val passwordVisibility by viewModel.passwordVisibility.observeAsState(initial = false)
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
 
-    val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
     val errorMessage: String by viewModel.errorMessage.observeAsState(initial = "")
 
 
@@ -84,39 +82,33 @@ fun Login(viewModel: LoginViewModel, navController: NavController) {
 
     val coroutineScope = rememberCoroutineScope()
 
-    if (isLoading) {
-        Box(Modifier.fillMaxSize()) {
-            CircularProgressIndicator(Modifier.align(Alignment.Center))
-        }
-    } else {
-        if (errorMessage != "") {
-            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-            viewModel.clearError()
-        }
-        Column {
-            Welcome()
-            Spacer(modifier = Modifier.height(16.dp))
-            RegisterBox(navController)
-            Spacer(modifier = Modifier.height(4.dp))
-            LoginBox()
-            Spacer(modifier = Modifier.height(16.dp))
-            Mail(email) { viewModel.onLoginChanged(it, password) }
-            Spacer(modifier = Modifier.height(16.dp))
-            Password(
-                password = password,
-                passwordVisibility = passwordVisibility,
-                onTextFieldChanged = { viewModel.onLoginChanged(email, it) },
-                toglePasswordVisibility = { viewModel.togglePasswordVisibility() }
-            )
-            Spacer(modifier = Modifier.height(32.dp))
-            LoginButton(loginEnable) {
-                coroutineScope.launch {
-                    viewModel.onLoginSelected(navController)
-                }
+    if (errorMessage != "") {
+        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+        viewModel.clearError()
+    }
+    Column {
+        Welcome()
+        Spacer(modifier = Modifier.height(16.dp))
+        RegisterBox(navController)
+        Spacer(modifier = Modifier.height(4.dp))
+        LoginBox()
+        Spacer(modifier = Modifier.height(16.dp))
+        Mail(email) { viewModel.onLoginChanged(it, password) }
+        Spacer(modifier = Modifier.height(16.dp))
+        Password(
+            password = password,
+            passwordVisibility = passwordVisibility,
+            onTextFieldChanged = { viewModel.onLoginChanged(email, it) },
+            toglePasswordVisibility = { viewModel.togglePasswordVisibility() }
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        LoginButton(loginEnable) {
+            coroutineScope.launch {
+                viewModel.onLoginSelected(navController)
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            TermsOfUse()
         }
+        Spacer(modifier = Modifier.height(16.dp))
+        TermsOfUse()
     }
 }
 

@@ -1,4 +1,4 @@
-package com.example.mvvmjetpackcomposelogin.screens.profilecreation.ui
+package com.example.mvvmjetpackcomposelogin.screens.profile.ui
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
-class ProfileCreationViewModel : ViewModel() {
+class ProfileViewModel : ViewModel() {
 
     // Screen
     private val _imageSelection = MutableLiveData<Boolean>()
@@ -28,15 +28,18 @@ class ProfileCreationViewModel : ViewModel() {
     }
 
 
-    // Imagenes
+    // Datos
     private val _images = MutableLiveData<List<PersonModel>>()
     val images : LiveData<List<PersonModel>> = _images
 
-    private val _currentImage = MutableLiveData<String>()
-    val currentImage : LiveData<String>  = _currentImage
+    private val _imagenInicial = MutableLiveData<String?>()
+    val imagenInicial : MutableLiveData<String?> = _imagenInicial
 
-    private val _imageInicial = MutableLiveData<String?>()
-    val imageInicial : MutableLiveData<String?> = _imageInicial
+    private val _currentImage = MutableLiveData<String?>()
+    val currentImage : MutableLiveData<String?> = _currentImage
+
+    private val _mail = MutableLiveData<String?>()
+    val mail : LiveData<String?> = _mail
 
     // Firebase
     private val auth = FirebaseAuth.getInstance()
@@ -61,9 +64,11 @@ class ProfileCreationViewModel : ViewModel() {
     }
 
     // Nombre
-    private val _name = MutableLiveData<String>()
-    val name: LiveData<String> = _name
+    private val _name = MutableLiveData<String?>()
+    val name: MutableLiveData<String?> = _name
 
+    private val _currenName = MutableLiveData<String?>()
+    val currentName: MutableLiveData<String?> = _currenName
     fun onNameChanged(name: String){
         _name.value = name
     }
@@ -78,7 +83,11 @@ class ProfileCreationViewModel : ViewModel() {
                 for (document in documents) {
                     if (document.exists()) {
                         val imagen = document.getString("imagen")
-                        _imageInicial.value = imagen
+                        _imagenInicial.value = imagen
+                        val nombre = document.getString("nombre")
+                        _name.value = nombre
+                        val mail = document.getString("mail")
+                        _mail.value = mail
                     } else {
                         Log.d("errorApp", "No se encontró el documento")
                     }

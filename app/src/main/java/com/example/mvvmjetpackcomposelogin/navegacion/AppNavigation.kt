@@ -6,12 +6,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.mvvmjetpackcomposelogin.data.MediaType
 import com.example.mvvmjetpackcomposelogin.screens.SplashScreen
-import com.example.mvvmjetpackcomposelogin.screens.home.ui.HomeScreen
 import com.example.mvvmjetpackcomposelogin.screens.informacion.ui.InformationScreen
 import com.example.mvvmjetpackcomposelogin.screens.login.ui.LoginScreen
 import com.example.mvvmjetpackcomposelogin.screens.login.ui.LoginViewModel
-import com.example.mvvmjetpackcomposelogin.screens.moviePruebas.PagPScreen
-import com.example.mvvmjetpackcomposelogin.screens.moviePruebas.PagPViewModel
+import com.example.mvvmjetpackcomposelogin.screens.pagPrincipal.PagPScreen
+import com.example.mvvmjetpackcomposelogin.screens.pagPrincipal.PagPViewModel
+import com.example.mvvmjetpackcomposelogin.screens.profile.ui.ProfileScreen
+import com.example.mvvmjetpackcomposelogin.screens.profile.ui.ProfileViewModel
 import com.example.mvvmjetpackcomposelogin.screens.profilecreation.ui.ProfileCreationScreen
 import com.example.mvvmjetpackcomposelogin.screens.profilecreation.ui.ProfileCreationViewModel
 import com.example.mvvmjetpackcomposelogin.screens.register.ui.RegisterScreen
@@ -34,11 +35,11 @@ fun AppNavigation() {
         composable(route = NavigationScreens.RegisterScreen.route) {
             RegisterScreen(RegisterViewModel(), navController)
         }
-        composable(route = NavigationScreens.HomeScreen.route) {
-            HomeScreen(navController)
-        }
         composable(route = NavigationScreens.ProfileCreationScreen.route) {
             ProfileCreationScreen(ProfileCreationViewModel(), navController)
+        }
+        composable(route = NavigationScreens.ProfileScreen.route){
+            ProfileScreen(navController, ProfileViewModel())
         }
         composable(route = NavigationScreens.PagPScreen.route) {
             PagPScreen(PagPViewModel(), navController)

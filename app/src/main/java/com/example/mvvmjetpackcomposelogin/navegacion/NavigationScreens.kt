@@ -8,9 +8,9 @@ sealed class NavigationScreens(val route: String) {
 
     data object RegisterScreen : NavigationScreens("/register")
 
-    data object HomeScreen : NavigationScreens("/home")
-
     data object ProfileCreationScreen : NavigationScreens("/profile-creation")
+
+    data object ProfileScreen : NavigationScreens("/profile")
 
     data object PagPScreen : NavigationScreens("/PagPScreen")
 

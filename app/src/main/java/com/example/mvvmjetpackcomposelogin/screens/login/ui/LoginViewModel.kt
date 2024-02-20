@@ -11,7 +11,6 @@ import com.example.mvvmjetpackcomposelogin.navegacion.NavigationScreens
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
@@ -25,20 +24,14 @@ class LoginViewModel : ViewModel() {
     private val _loginEnable = MutableLiveData<Boolean>()
     val loginEnable: LiveData<Boolean> = _loginEnable
 
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
-
     fun onLoginChanged(email: String, password: String) {
         _email.value = email
         _password.value = password
         _loginEnable.value = isValidEmail(email) && isValidPassword(password)
     }
 
-    suspend fun onLoginSelected(navController: NavController) {
-        _isLoading.value = true
-        delay(2000)
+    fun onLoginSelected(navController: NavController) {
         signInEmailPassword { navController.navigate(NavigationScreens.ProfileCreationScreen.route) }
-        _isLoading.value = false
     }
 
     private fun isValidEmail(email: String): Boolean =

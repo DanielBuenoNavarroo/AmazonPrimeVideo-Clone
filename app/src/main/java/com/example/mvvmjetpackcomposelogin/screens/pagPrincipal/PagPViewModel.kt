@@ -1,5 +1,6 @@
-package com.example.mvvmjetpackcomposelogin.screens.moviePruebas
+package com.example.mvvmjetpackcomposelogin.screens.pagPrincipal
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,8 @@ import com.example.mvvmjetpackcomposelogin.data.api.ListaGenerosSeries
 import com.example.mvvmjetpackcomposelogin.data.api.model.MoviesModel
 import com.example.mvvmjetpackcomposelogin.data.api.retrofit.RetrofitClient
 import com.example.mvvmjetpackcomposelogin.navegacion.NavigationScreens
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 class PagPViewModel : ViewModel() {
@@ -29,6 +32,34 @@ class PagPViewModel : ViewModel() {
 
     fun onItemSelected(navController: NavController, id: Any, mediaType: MediaType){
         navController.navigate("${NavigationScreens.InformationScreen.route}/${mediaType.nombre}/$id")
+    }
+
+    // Perfil
+    private val _imgP = MutableLiveData<String>()
+    val imgP : LiveData<String> = _imgP
+
+    init {
+        val auth = FirebaseAuth.getInstance()
+        val currentUserId = auth.currentUser?.uid
+        val db = FirebaseFirestore.getInstance()
+        val collection = db.collection("usuarios")
+
+        val query = collection.whereEqualTo("user_id", currentUserId)
+
+        query.get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    if (document.exists()) {
+                        val nombre = document.getString("imagen")
+                        _imgP.value = nombre.toString()
+                    } else {
+                        Log.d("errorApp", "No se encontró el documento")
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("errorApp", "Error al obtener documentos: ", exception)
+            }
     }
 
     // PELICULAS
