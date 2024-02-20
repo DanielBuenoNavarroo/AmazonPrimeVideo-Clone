@@ -55,13 +55,13 @@ import com.example.mvvmjetpackcomposelogin.ui.theme.botonDisabled
 @Composable
 fun ProfileCreationScreen(viewModel: ProfileCreationViewModel, navController: NavController) {
 
-    val firstImage : String? by viewModel.imageInicial.observeAsState(initial = "")
+    val firstImage: String? by viewModel.imageInicial.observeAsState(initial = "")
     val imageSelection: Boolean by viewModel.imageSelection.observeAsState(initial = false)
     val nombre: String by viewModel.name.observeAsState(initial = "")
     val currentImage: String by viewModel.currentImage.observeAsState(initial = "")
     val imagenes by viewModel.images.observeAsState()
 
-    if (firstImage != ""){
+    if (firstImage != "") {
         navController.navigate(NavigationScreens.PagPScreen.route)
     }
     Box(
@@ -121,10 +121,12 @@ fun Nuevo() {
 
 @Composable
 fun Foto(viewModel: ProfileCreationViewModel, imagen: String) {
-    Column (
+    Column(
         Modifier
             .fillMaxWidth()
-            .clickable { viewModel.changeToImageSelection() }, horizontalAlignment = Alignment.CenterHorizontally){
+            .clickable { viewModel.changeToImageSelection() },
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         if (imagen == "") {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_account_circle_24),

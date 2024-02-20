@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.mvvmjetpackcomposelogin.CONSTANTES.ApiKey
-import com.example.mvvmjetpackcomposelogin.data.MediaType
+import com.example.mvvmjetpackcomposelogin.data.model.MediaType
 import com.example.mvvmjetpackcomposelogin.data.api.model.Movie
 import com.example.mvvmjetpackcomposelogin.data.api.model.SingleTvShowModel
 import com.example.mvvmjetpackcomposelogin.data.api.retrofit.RetrofitClient

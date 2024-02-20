@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.mvvmjetpackcomposelogin.CONSTANTES.ApiKey
-import com.example.mvvmjetpackcomposelogin.data.MediaType
+import com.example.mvvmjetpackcomposelogin.data.model.MediaType
 import com.example.mvvmjetpackcomposelogin.data.api.ListaGenerosMovies
 import com.example.mvvmjetpackcomposelogin.data.api.ListaGenerosSeries
 import com.example.mvvmjetpackcomposelogin.data.api.model.MoviesModel

@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.mvvmjetpackcomposelogin.data.MediaType
+import com.example.mvvmjetpackcomposelogin.data.model.MediaType
 import com.example.mvvmjetpackcomposelogin.screens.SplashScreen
 import com.example.mvvmjetpackcomposelogin.screens.informacion.ui.InformationScreen
 import com.example.mvvmjetpackcomposelogin.screens.login.ui.LoginScreen

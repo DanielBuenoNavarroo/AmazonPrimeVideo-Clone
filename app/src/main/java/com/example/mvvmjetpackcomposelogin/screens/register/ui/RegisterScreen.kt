@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -74,10 +73,9 @@ fun Register(viewModel: RegisterViewModel, navController: NavController) {
 
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
-    val confirmPassword : String by viewModel.confirmPassword.observeAsState(initial = "")
+    val confirmPassword: String by viewModel.confirmPassword.observeAsState(initial = "")
     val regsterEnable: Boolean by viewModel.registerEnable.observeAsState(initial = false)
     val passwordVisibility by viewModel.passwordVisibility.observeAsState(initial = false)
-    val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
 
     val errorMessage: String by viewModel.errorMessage.observeAsState(initial = "")
 
@@ -85,46 +83,40 @@ fun Register(viewModel: RegisterViewModel, navController: NavController) {
 
     val coroutineScope = rememberCoroutineScope()
 
-    if (isLoading) {
-        Box(Modifier.fillMaxSize()) {
-            CircularProgressIndicator(Modifier.align(Alignment.Center))
-        }
-    } else {
-        if (errorMessage != "") {
-            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-            viewModel.clearError()
-        }
+    if (errorMessage != "") {
+        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+        viewModel.clearError()
+    }
 
-        Column {
-            Welcome()
-            Spacer(Modifier.height(16.dp))
-            RegisterBox()
-            Spacer(Modifier.height(16.dp))
-            Mail(email) { viewModel.onEmailChanged(it) }
-            Spacer(Modifier.height(16.dp))
-            Password(
-                password = password,
-                passwordVisibility = passwordVisibility,
-                onTextFieldChanged = { viewModel.onPasswordChanged(it) },
-            )
-            Spacer(Modifier.height(16.dp))
-            ConfirmPassword(
-                password = confirmPassword,
-                passwordVisibility = passwordVisibility,
-                onTextFieldChanged = {viewModel.onConfirmPasswordChanged(it)},
-                toglePasswordVisibility = { viewModel.togglePasswordVisibility()}
-            )
-            Spacer(Modifier.height(32.dp))
-            RegisterButton(regsterEnable) {
-                coroutineScope.launch {
-                    viewModel.onRegisterSelected(navController)
-                }
+    Column {
+        Welcome()
+        Spacer(Modifier.height(16.dp))
+        RegisterBox()
+        Spacer(Modifier.height(16.dp))
+        Mail(email) { viewModel.onEmailChanged(it) }
+        Spacer(Modifier.height(16.dp))
+        Password(
+            password = password,
+            passwordVisibility = passwordVisibility,
+            onTextFieldChanged = { viewModel.onPasswordChanged(it) },
+        )
+        Spacer(Modifier.height(16.dp))
+        ConfirmPassword(
+            password = confirmPassword,
+            passwordVisibility = passwordVisibility,
+            onTextFieldChanged = { viewModel.onConfirmPasswordChanged(it) },
+            toglePasswordVisibility = { viewModel.togglePasswordVisibility() }
+        )
+        Spacer(Modifier.height(32.dp))
+        RegisterButton(regsterEnable) {
+            coroutineScope.launch {
+                viewModel.onRegisterSelected(navController)
             }
-            Spacer(Modifier.height(16.dp))
-            TermsOfUse()
-            Spacer(Modifier.height(64.dp))
-            LoginBox(navController)
         }
+        Spacer(Modifier.height(16.dp))
+        TermsOfUse()
+        Spacer(Modifier.height(64.dp))
+        LoginBox(navController)
     }
 }
 
@@ -221,11 +213,14 @@ fun Password(
 }
 
 @Composable
-fun ConfirmPassword(password: String,
-                    passwordVisibility: Boolean,
-                    onTextFieldChanged: (String) -> Unit,
-                    toglePasswordVisibility: () -> Unit){
-    TextField(value = password, onValueChange = {onTextFieldChanged(it)},
+fun ConfirmPassword(
+    password: String,
+    passwordVisibility: Boolean,
+    onTextFieldChanged: (String) -> Unit,
+    toglePasswordVisibility: () -> Unit
+) {
+    TextField(
+        value = password, onValueChange = { onTextFieldChanged(it) },
         modifier = Modifier
             .fillMaxWidth(),
         placeholder = {

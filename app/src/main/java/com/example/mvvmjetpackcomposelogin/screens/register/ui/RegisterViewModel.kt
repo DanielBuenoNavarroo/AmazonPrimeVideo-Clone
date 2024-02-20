@@ -11,7 +11,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.delay
 
 class RegisterViewModel {
 
@@ -26,9 +25,6 @@ class RegisterViewModel {
 
     private val _registerEnable = MutableLiveData<Boolean>()
     val registerEnable: LiveData<Boolean> = _registerEnable
-
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
 
     fun onEmailChanged(email: String) {
         _email.value = email
@@ -51,10 +47,8 @@ class RegisterViewModel {
                 isSamePassword(password.value ?: "", confirmPassword)
     }
 
-    suspend fun onRegisterSelected(navController: NavController) {
-        _isLoading.value = true
+    fun onRegisterSelected(navController: NavController) {
         createUserEmailPassword { navController.navigate(NavigationScreens.ProfileCreationScreen.route) }
-        delay(2000)
     }
 
     private fun isValidEmail(email: String): Boolean =
@@ -86,7 +80,7 @@ class RegisterViewModel {
         _errorMessage.value = ""
     }
 
-    private fun createUserEmailPassword(login: () -> Unit) {
+    private fun createUserEmailPassword(register: () -> Unit) {
 
         val email = _email.value.toString()
         val password = _password.value.toString()
@@ -97,7 +91,7 @@ class RegisterViewModel {
                 if (it.isSuccessful) {
                     Log.i("aplicacion", "logeado correctamente")
                     createUser()
-                    login()
+                    register()
                 } else {
                     Log.i("aplicacion", "registrado incorrectamente: ${it.exception}")
                     _errorMessage.value = "Error al registrarse"

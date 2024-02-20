@@ -28,7 +28,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,7 +53,6 @@ import com.example.mvvmjetpackcomposelogin.ui.theme.botonDisabled
 import com.example.mvvmjetpackcomposelogin.ui.theme.linksColor
 import com.example.mvvmjetpackcomposelogin.ui.theme.noSeleccionado
 import com.example.mvvmjetpackcomposelogin.ui.theme.textColor
-import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
@@ -80,8 +78,6 @@ fun Login(viewModel: LoginViewModel, navController: NavController) {
 
     val context = LocalContext.current
 
-    val coroutineScope = rememberCoroutineScope()
-
     if (errorMessage != "") {
         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
         viewModel.clearError()
@@ -103,9 +99,7 @@ fun Login(viewModel: LoginViewModel, navController: NavController) {
         )
         Spacer(modifier = Modifier.height(32.dp))
         LoginButton(loginEnable) {
-            coroutineScope.launch {
-                viewModel.onLoginSelected(navController)
-            }
+            viewModel.onLoginSelected(navController)
         }
         Spacer(modifier = Modifier.height(16.dp))
         TermsOfUse()

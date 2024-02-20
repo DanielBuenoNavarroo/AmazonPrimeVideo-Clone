@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.mvvmjetpackcomposelogin.R
-import com.example.mvvmjetpackcomposelogin.data.MediaType
+import com.example.mvvmjetpackcomposelogin.data.model.MediaType
 import com.example.mvvmjetpackcomposelogin.data.api.model.MoviesModel
 import com.example.mvvmjetpackcomposelogin.navegacion.NavigationScreens
 import com.example.mvvmjetpackcomposelogin.ui.theme.bgPagPrincipal

@@ -18,25 +18,17 @@ class ProfileCreationViewModel : ViewModel() {
     private val _imageSelection = MutableLiveData<Boolean>()
     val imageSelection : LiveData<Boolean> = _imageSelection
 
-    fun changeToImageSelection(){
-        _imageSelection.value = _imageSelection.value?.not() ?: false
-    }
-
-    fun setCurrentImage(imageUrl: String) {
-        _currentImage.value = imageUrl
-        changeToImageSelection()
-    }
-
-
-    // Imagenes
     private val _images = MutableLiveData<List<PersonModel>>()
     val images : LiveData<List<PersonModel>> = _images
+
+    private val _imageInicial = MutableLiveData<String?>()
+    val imageInicial : MutableLiveData<String?> = _imageInicial
 
     private val _currentImage = MutableLiveData<String>()
     val currentImage : LiveData<String>  = _currentImage
 
-    private val _imageInicial = MutableLiveData<String?>()
-    val imageInicial : MutableLiveData<String?> = _imageInicial
+    private val _name = MutableLiveData<String>()
+    val name: LiveData<String> = _name
 
     // Firebase
     private val auth = FirebaseAuth.getInstance()
@@ -45,28 +37,6 @@ class ProfileCreationViewModel : ViewModel() {
     private val collection = db.collection("usuarios")
 
     private val query = collection.whereEqualTo("user_id", currentUserId)
-
-    fun guardarDatos(imagen: String, nombre : String, principal : () -> Unit){
-        query.get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    document.reference.update("imagen", imagen)
-                    document.reference.update("nombre", nombre)
-                }
-                principal()
-            }
-            .addOnFailureListener { exception ->
-                Log.d("errorApp", "Error al obtener documentos: ", exception)
-            }
-    }
-
-    // Nombre
-    private val _name = MutableLiveData<String>()
-    val name: LiveData<String> = _name
-
-    fun onNameChanged(name: String){
-        _name.value = name
-    }
 
     init {
         viewModelScope.launch {
@@ -83,6 +53,33 @@ class ProfileCreationViewModel : ViewModel() {
                         Log.d("errorApp", "No se encontró el documento")
                     }
                 }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("errorApp", "Error al obtener documentos: ", exception)
+            }
+    }
+
+    fun changeToImageSelection(){
+        _imageSelection.value = _imageSelection.value?.not() ?: false
+    }
+
+    fun setCurrentImage(imageUrl: String) {
+        _currentImage.value = imageUrl
+        changeToImageSelection()
+    }
+
+    fun onNameChanged(name: String){
+        _name.value = name
+    }
+
+    fun guardarDatos(imagen: String, nombre : String, principal : () -> Unit){
+        query.get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    document.reference.update("imagen", imagen)
+                    document.reference.update("nombre", nombre)
+                }
+                principal()
             }
             .addOnFailureListener { exception ->
                 Log.d("errorApp", "Error al obtener documentos: ", exception)
