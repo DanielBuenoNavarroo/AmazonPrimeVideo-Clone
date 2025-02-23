@@ -38,8 +38,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.mvvmjetpackcomposelogin.R
-import com.example.mvvmjetpackcomposelogin.data.model.MediaType
 import com.example.mvvmjetpackcomposelogin.data.api.model.MoviesModel
+import com.example.mvvmjetpackcomposelogin.data.model.MediaType
 import com.example.mvvmjetpackcomposelogin.navegacion.NavigationScreens
 import com.example.mvvmjetpackcomposelogin.ui.theme.bgPagPrincipal
 
@@ -226,9 +226,9 @@ fun HorizontalImageSlider(movieList: List<MoviesModel>, onItemSelected: (Int) ->
     val peliculas = movieList.take(npeliculas)
 
     val pagerState = rememberPagerState(
-        initialPage = 500,
+        initialPage = 1000,
         initialPageOffsetFraction = 0f,
-        pageCount = { 1000 }
+        pageCount = { 2000 }
     )
 
     Column {

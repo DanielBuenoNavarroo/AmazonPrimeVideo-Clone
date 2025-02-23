@@ -43,6 +43,7 @@ import com.example.mvvmjetpackcomposelogin.ui.theme.azulPrincipal
 import com.example.mvvmjetpackcomposelogin.ui.theme.bgPrincipal
 import com.example.mvvmjetpackcomposelogin.ui.theme.botonDisabled
 import com.example.mvvmjetpackcomposelogin.ui.theme.noSeleccionado
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun ProfileScreen(navController: NavController, viewModel: ProfileViewModel) {
@@ -51,6 +52,7 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileViewModel) {
     val currentImage: String? by viewModel.currentImage.observeAsState(initial = "")
     val currentName: String? by viewModel.currentName.observeAsState(initial = "")
     val nombre: String? by viewModel.name.observeAsState(initial = "")
+    val mail : String? by viewModel.mail.observeAsState(initial = "")
     val imagenes by viewModel.images.observeAsState()
 
     Box(
@@ -64,13 +66,20 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileViewModel) {
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Nombre(currentName)
+                Nombre(nombre)
+                Spacer(modifier = Modifier.height(8.dp))
+                Mail(mail)
                 Spacer(modifier = Modifier.height(16.dp))
-                currentImage?.let { Foto(viewModel, it) }
+                if (currentImage != "") {
+                    currentImage?.let { Foto(viewModel, it ) }
+                }else {
+                    imagenInicial?.let { Foto(viewModel, it) }
+                }
                 Spacer(modifier = Modifier.height(16.dp))
                 currentImage?.let {
                     nombre?.let { it1 -> BotonContinuar(navController, viewModel, it, it1) }
                 }
+                ButtonCerrarSesion(navController)
                 ButtonCancelar(navController)
             }
         } else {
@@ -104,11 +113,30 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileViewModel) {
 @Composable
 fun Nombre(nombre: String?) {
     if (nombre != null) {
-        Text(
-            text = nombre, color = Color.White,
-            fontSize = 32.sp,
-            fontWeight = FontWeight(900)
-        )
+        Column (Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start,){
+            Text(text = "Nombre: ", fontSize = 20.sp, color = Color.White)
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = nombre, color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight(900)
+            )
+        }
+    }
+}
+
+@Composable
+fun Mail(nombre: String?) {
+    if (nombre != null) {
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
+            Text(text = "Gmail: ", fontSize = 20.sp, color = Color.White)
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = nombre, color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight(900)
+            )
+        }
     }
 }
 
@@ -179,6 +207,27 @@ fun BotonContinuar(
         ) {
             Text(text = "Aplicar Cambios")
         }
+    }
+}
+
+@Composable
+fun ButtonCerrarSesion(navController: NavController) {
+    val auth = FirebaseAuth.getInstance()
+    Button(
+        onClick = {
+                    auth.signOut()
+                    navController.navigate(NavigationScreens.LoginScreen.route)
+                  },
+        modifier = Modifier.fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = botonDisabled,
+            disabledContainerColor = botonDisabled,
+            contentColor = Color.White,
+            disabledContentColor = Color.White
+        ),
+        shape = RoundedCornerShape(2.dp),
+    ) {
+        Text(text = "Cerrar Sesion")
     }
 }
 

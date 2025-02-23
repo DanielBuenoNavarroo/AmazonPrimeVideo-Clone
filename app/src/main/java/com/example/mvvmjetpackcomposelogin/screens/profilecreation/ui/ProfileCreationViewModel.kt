@@ -13,7 +13,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 class ProfileCreationViewModel : ViewModel() {
-
     // Screen
     private val _imageSelection = MutableLiveData<Boolean>()
     val imageSelection : LiveData<Boolean> = _imageSelection
